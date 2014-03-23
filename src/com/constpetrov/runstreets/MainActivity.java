@@ -6,10 +6,14 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
+	private StreetsDataSource dataSource;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		dataSource = new StreetsDataSource(this);
+		dataSource.checkAndCreate();
 	}
 
 	@Override
