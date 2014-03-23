@@ -13,8 +13,9 @@ public class StreetsDBHelper extends SQLiteOpenHelper
 	}
 	
 	@Override
-	public void onCreate(SQLiteDatabase arg0) {
-		// TODO Auto-generated method stub
+	public void onCreate(SQLiteDatabase db) {
+		
+		
 		
 	}
 
