@@ -1,10 +1,10 @@
 package com.constpetrov.runstreets;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -22,6 +22,36 @@ public class StreetsDataSource {
 	public StreetsDataSource(Context context) {
 		dbHelper = new StreetsDBHelper(context);
 		assets = context.getAssets();
+	}
+	
+	public List<String> execReadQuery(String query){
+		List<String> result = new LinkedList<String>();
+		try{
+			Cursor c = dbHelper.getReadableDatabase().rawQuery(query, null);
+			while(!c.isAfterLast()){
+				StringBuilder b = new StringBuilder();
+				for (int i = 0; i < c.getColumnCount(); i++){
+					switch (c.getType(i)){
+						case Cursor.FIELD_TYPE_STRING:{
+							b.append(c.getString(i));
+							break;
+						}
+						case Cursor.FIELD_TYPE_INTEGER:{
+							b.append(c.getInt(i));
+							break;
+						}
+					}
+					if(i != c.getColumnCount()-1){
+						b.append(",");
+					}
+				}
+				result.add(b.toString());
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		}
+		return result;
 	}
 	
 	public void checkAndCreate() {
@@ -56,7 +86,4 @@ public class StreetsDataSource {
 			}
 		}
 	}
-	
-	
-
 }
