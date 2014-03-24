@@ -30,6 +30,7 @@ public class MainActivity extends ListActivity {
 		dataSource.checkAndCreate();
 		
 		queryText = (EditText) findViewById(R.id.editText1);
+		queryText.setText("select * from areas");
 		execButton = (Button) findViewById(R.id.button1);
 		execButton.setOnClickListener(new OnClickListener() {
 			
