@@ -41,7 +41,8 @@ public class MainActivity extends ListActivity {
 					List<String> res = dataSource.execReadQuery(query);
 					
 					if(res != null && res.size() != 0){
-						setListAdapter(new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, res));
+						setListAdapter(new ArrayAdapter<String>(MainActivity.this, 
+								android.R.layout.simple_list_item_1, res));
 					}
 				}
 			}
