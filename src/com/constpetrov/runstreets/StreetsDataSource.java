@@ -62,15 +62,61 @@ public class StreetsDataSource {
 	public List<StreetInfo> getStreetInfos(String name){
 		List<StreetInfo> res = new LinkedList<StreetInfo>();
 		List<Street> streets = findStreets(name);
-		
+		for(Street street: streets){
+			StreetInfo info = new StreetInfo();
+			info.setStreet(street);
+			info.setStreetTypeName(getStreetTypeName(street));
+			info.setAreas(getAreasForStreet(street));
+			info.setHistory(getHistoryForStreet(street));
+			res.add(info);
+		}
 		return res;
 	}
 	
-	private void updateRenameHistory(List<StreetInfo> res) {
-		// TODO Auto-generated method stub
-		
+	public List<AreaInfo> getAreaInfos(String name){
+		List<AreaInfo> res = new LinkedList<AreaInfo>();
+		List<Area> areas = findAreas(name);
+		for(Area area: areas){
+			AreaInfo info = new AreaInfo();
+			info.setArea(area);
+			info.setAreaTypeName(getAreaTypeName(area));
+			info.setStreets(getStreetForAreas(area));
+			info.setHistory(getHistoryForArea(area));
+			res.add(info);
+		}
+		return res;
 	}
 	
+	private List<StreetHistory> getHistoryForStreet(Street street) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<Area> getAreasForStreet(Street street) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getStreetTypeName(Street street) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private List<AreaHistory> getHistoryForArea(Area area) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private List<Street> getStreetForAreas(Area area) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String getAreaTypeName(Area area) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private List<Street> findStreets(String name){
 		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
@@ -89,18 +135,82 @@ public class StreetsDataSource {
 		}
 		return res;
 	}
-
+	
+	private List<Street> findStreets(int id){
+		List<Street> res = new LinkedList<Street>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("streets", null, "id equals ?s", new String [] {String.valueOf(id)}, null, null, "sort");
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToStreet(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
+	}
+	
+	private List<Area> findAreas(String name){
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("areas", null, "name like %?s%", new String [] {name}, null, null, "sort");
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToArea(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+			c.close();
+		}
+		return res;
+	}
+	
+	private List<Area> findAreas(int id){
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("areas", null, "id equals ?s", new String [] {String.valueOf(id)}, null, null, "sort");
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToArea(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
+	}
+	
 	private Street cursorToStreet(Cursor c) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	private StreetInfo cursorToStreetInfo(Cursor c) {
-		StreetInfo res = new StreetInfo();
-		Street street = new Street();
-		
-		res.setStreet(street);
-		return res;
+	
+	private Area cursorToArea(Cursor c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private StreetHistory cursorToStreetHistory(Cursor c){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private AreaHistory cursorToAreaHistory(Cursor c){
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void checkAndCreate() {
