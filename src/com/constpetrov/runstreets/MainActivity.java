@@ -28,7 +28,7 @@ public class MainActivity extends ListActivity {
 		dataSource.checkAndCreate();
 		
 		queryText = (EditText) findViewById(R.id.editText1);
-		queryText.setText("select * from areas");
+		queryText.setText("SELECT * FROM street_history WHERE id_street IN (SELECT id_street FROM street_history GROUP BY id_street HAVING COUNT(*) > 1) ORDER BY id_street");
 		execButton = (Button) findViewById(R.id.button1);
 		execButton.setOnClickListener(new OnClickListener() {
 			

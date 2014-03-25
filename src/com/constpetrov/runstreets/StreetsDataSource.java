@@ -140,7 +140,7 @@ public class StreetsDataSource {
 		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("streets", null, "id equals ?s", new String [] {String.valueOf(id)}, null, null, "sort");
+			c = dbHelper.getReadableDatabase().query("streets", null, "id = " + id, null, null, null, "sort");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToStreet(c));
@@ -159,7 +159,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "name like %?s%", new String [] {name}, null, null, "sort");
+			c = dbHelper.getReadableDatabase().query("areas", null, "name like %?s%", new String [] {name}, null, null, "name");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -178,7 +178,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id equals ?s", new String [] {String.valueOf(id)}, null, null, "sort");
+			c = dbHelper.getReadableDatabase().query("areas", null, "id = "+id, null, null, null, "name");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
