@@ -59,14 +59,26 @@ public class StreetsDataSource {
 		return result;
 	}
 	
-	public List<StreetInfo> findStreet(String name){
+	public List<StreetInfo> getStreetInfos(String name){
 		List<StreetInfo> res = new LinkedList<StreetInfo>();
+		List<Street> streets = findStreets(name);
+		
+		return res;
+	}
+	
+	private void updateRenameHistory(List<StreetInfo> res) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private List<Street> findStreets(String name){
+		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("streets", null, "name like %?s%", new String [] {name}, null, null, "sort");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
-				res.add(cursorToStreetInfo(c));
+				res.add(cursorToStreet(c));
 				c.moveToNext();
 			}
 		} catch (SQLException e){
@@ -75,13 +87,12 @@ public class StreetsDataSource {
 			if (c != null)
 			c.close();
 		}
-		updateRenameHistory(res);
 		return res;
 	}
-	
-	private void updateRenameHistory(List<StreetInfo> res) {
+
+	private Street cursorToStreet(Cursor c) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	private StreetInfo cursorToStreetInfo(Cursor c) {
