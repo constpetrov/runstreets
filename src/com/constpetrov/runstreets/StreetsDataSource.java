@@ -26,8 +26,9 @@ public class StreetsDataSource {
 	
 	public List<String> execReadQuery(String query){
 		List<String> result = new LinkedList<String>();
+		Cursor c = null;
 		try{
-			Cursor c = dbHelper.getReadableDatabase().rawQuery(query, null);
+			c = dbHelper.getReadableDatabase().rawQuery(query, null);
 			c.moveToFirst();
 			while(!c.isAfterLast()){
 				StringBuilder b = new StringBuilder();
@@ -51,10 +52,46 @@ public class StreetsDataSource {
 			}
 		} catch (SQLException e){
 			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+			c.close();
 		}
 		return result;
 	}
 	
+	public List<StreetInfo> findStreet(String name){
+		List<StreetInfo> res = new LinkedList<StreetInfo>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("streets", null, "name like %?s%", new String [] {name}, null, null, "sort");
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToStreetInfo(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+			c.close();
+		}
+		updateRenameHistory(res);
+		return res;
+	}
+	
+	private void updateRenameHistory(List<StreetInfo> res) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private StreetInfo cursorToStreetInfo(Cursor c) {
+		StreetInfo res = new StreetInfo();
+		Street street = new Street();
+		
+		res.setStreet(street);
+		return res;
+	}
+
 	public void checkAndCreate() {
 		Cursor c = dbHelper.getReadableDatabase().rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='streets'", null);
 		if(c.getCount() != 0){
