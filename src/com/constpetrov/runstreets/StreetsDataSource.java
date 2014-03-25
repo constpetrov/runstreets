@@ -28,6 +28,7 @@ public class StreetsDataSource {
 		List<String> result = new LinkedList<String>();
 		try{
 			Cursor c = dbHelper.getReadableDatabase().rawQuery(query, null);
+			c.moveToFirst();
 			while(!c.isAfterLast()){
 				StringBuilder b = new StringBuilder();
 				for (int i = 0; i < c.getColumnCount(); i++){

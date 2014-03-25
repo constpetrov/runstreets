@@ -4,15 +4,17 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ListActivity {
 
 	private StreetsDataSource dataSource;
 	
@@ -28,7 +30,7 @@ public class MainActivity extends Activity {
 		dataSource.checkAndCreate();
 		
 		queryText = (EditText) findViewById(R.id.editText1);
-		resultView = (ListView) findViewById(R.id.listView1);
+		queryText.setText("select * from areas");
 		execButton = (Button) findViewById(R.id.button1);
 		execButton.setOnClickListener(new OnClickListener() {
 			
@@ -38,10 +40,9 @@ public class MainActivity extends Activity {
 				if(!"".equals(query)){
 					List<String> res = dataSource.execReadQuery(query);
 					
-					for(String str: res){
-						TextView child = new TextView(getApplicationContext());
-						child.setText(str);
-						resultView.addView(child);
+					if(res != null && res.size() != 0){
+						setListAdapter(new ArrayAdapter<String>(MainActivity.this, 
+								android.R.layout.simple_list_item_1, res));
 					}
 				}
 			}
