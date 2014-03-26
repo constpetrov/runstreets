@@ -114,8 +114,22 @@ public class StreetsDataSource {
 	}
 
 	private List<Area> getAreasForStreet(Street street) {
-		// TODO Auto-generated method stub
-		return null;
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("street_areas", null, "street = " +street.getId(), null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(getArea(c.getInt(2)));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
 	}
 
 	private String getStreetTypeName(Street street) {
@@ -159,7 +173,7 @@ public class StreetsDataSource {
 			c = dbHelper.getReadableDatabase().query("street_areas", null, "area = " +area.getId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
-				res.add(findStreets(c.getInt(1)));
+				res.add(getStreet(c.getInt(1)));
 				c.moveToNext();
 			}
 		} catch (SQLException e){
@@ -205,7 +219,7 @@ public class StreetsDataSource {
 		return res;
 	}
 	
-	private Street findStreets(int id){
+	private Street getStreet(int id){
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("streets", null, "id = " + id, null, null, null, "sort");
@@ -239,23 +253,19 @@ public class StreetsDataSource {
 		return res;
 	}
 	
-	private List<Area> findAreas(int id){
-		List<Area> res = new LinkedList<Area>();
+	private Area getArea(int id){
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("areas", null, "id = "+id, null, null, null, "name");
 			c.moveToFirst();
-			while (!c.isAfterLast()){
-				res.add(cursorToArea(c));
-				c.moveToNext();
-			}
+			return cursorToArea(c);
 		} catch (SQLException e){
 			Log.e(TAG, "Cannot execute query", e);
 		} finally {
 			if (c != null)
 				c.close();
 		}
-		return res;
+		return null;
 	}
 	
 	private Street cursorToStreet(Cursor c) {
