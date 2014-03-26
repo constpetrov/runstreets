@@ -132,7 +132,7 @@ public class StreetsDataSource {
 		return res;
 	}
 	
-	private List<Area> getAreasForArea(Area area){
+	private List<Area> getChildAreasForArea(Area area){
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
@@ -149,7 +149,7 @@ public class StreetsDataSource {
 				c.close();
 		}
 		for(Area reaArea: res){
-			res.addAll(getAreasForArea(reaArea));
+			res.addAll(getChildAreasForArea(reaArea));
 		}
 		return res;
 	}
