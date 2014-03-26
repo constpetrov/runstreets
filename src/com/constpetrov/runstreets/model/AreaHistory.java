@@ -3,6 +3,7 @@ package com.constpetrov.runstreets.model;
 public class AreaHistory {
 	private int id;
 	private int areaId;
+	private String code;
 	private String name;
 	private int type;
 	private String doc;
@@ -17,6 +18,12 @@ public class AreaHistory {
 	}
 	public void setAreaId(int areaId) {
 		this.areaId = areaId;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
 	}
 	public String getName() {
 		return name;

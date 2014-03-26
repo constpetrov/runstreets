@@ -238,8 +238,15 @@ public class StreetsDataSource {
 	}
 	
 	private AreaHistory cursorToAreaHistory(Cursor c){
-		// TODO Auto-generated method stub
-		return null;
+		AreaHistory hist = new AreaHistory();
+		int i = 0;
+		hist.setId(c.getInt(i++));
+		hist.setAreaId(c.getInt(i++));
+		hist.setCode(c.getString(i++));
+		hist.setName(c.getString(i++));
+		hist.setType(c.getInt(i++));
+		hist.setDoc(c.getString(i++));
+		return hist;
 	}
 
 	public void checkAndCreate() {
