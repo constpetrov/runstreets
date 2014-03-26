@@ -1,4 +1,4 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.model;
 
 import java.util.List;
 

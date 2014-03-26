@@ -1,8 +1,8 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.model;
 
-public class StreetHistory {
+public class AreaHistory {
 	private int id;
-	private int streetId;
+	private int areaId;
 	private String name;
 	private int type;
 	private String doc;
@@ -12,11 +12,11 @@ public class StreetHistory {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getStreetId() {
-		return streetId;
+	public int getAreaId() {
+		return areaId;
 	}
-	public void setStreetId(int streetId) {
-		this.streetId = streetId;
+	public void setAreaId(int areaId) {
+		this.areaId = areaId;
 	}
 	public String getName() {
 		return name;
@@ -37,5 +37,4 @@ public class StreetHistory {
 		this.doc = doc;
 	}
 	
-
 }

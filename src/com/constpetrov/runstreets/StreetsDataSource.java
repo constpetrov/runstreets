@@ -6,6 +6,13 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.constpetrov.runstreets.model.Area;
+import com.constpetrov.runstreets.model.AreaHistory;
+import com.constpetrov.runstreets.model.AreaInfo;
+import com.constpetrov.runstreets.model.Street;
+import com.constpetrov.runstreets.model.StreetHistory;
+import com.constpetrov.runstreets.model.StreetInfo;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
