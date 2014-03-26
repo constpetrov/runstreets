@@ -105,7 +105,17 @@ public class StreetsDataSource {
 	}
 
 	private String getStreetTypeName(Street street) {
-		// TODO Auto-generated method stub
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("street_types", null, "id = " + street.getType(), null, null, null, null);
+			c.moveToFirst();
+			return c.getString(2);
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+			c.close();
+		}
 		return null;
 	}
 	
