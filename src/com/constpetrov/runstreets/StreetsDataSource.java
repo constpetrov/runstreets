@@ -72,9 +72,9 @@ public class StreetsDataSource {
 		for(Street street: streets){
 			StreetInfo info = new StreetInfo();
 			info.setStreet(street);
-			info.setStreetTypeName(getStreetTypeName(street));
-			info.setAreas(getAreasForStreet(street));
-			info.setHistory(getHistoryForStreet(street));
+			info.setStreetTypeName(getTypeName(street));
+			info.setAreas(getAreas(street));
+			info.setHistory(getHistory(street));
 			res.add(info);
 		}
 		return res;
@@ -86,15 +86,15 @@ public class StreetsDataSource {
 		for(Area area: areas){
 			AreaInfo info = new AreaInfo();
 			info.setArea(area);
-			info.setAreaTypeName(getAreaTypeName(area));
-			info.setStreets(getStreetsForArea(area));
-			info.setHistory(getHistoryForArea(area));
+			info.setAreaTypeName(getTypeName(area));
+			info.setStreets(getStreets(area));
+			info.setHistory(getHistory(area));
 			res.add(info);
 		}
 		return res;
 	}
 	
-	private List<StreetHistory> getHistoryForStreet(Street street) {
+	private List<StreetHistory> getHistory(Street street) {
 		List<StreetHistory> res = new LinkedList<StreetHistory>();
 		Cursor c = null;
 		try{
@@ -113,7 +113,7 @@ public class StreetsDataSource {
 		return res;
 	}
 
-	private List<Area> getAreasForStreet(Street street) {
+	private List<Area> getAreas(Street street) {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
@@ -132,14 +132,14 @@ public class StreetsDataSource {
 		return res;
 	}
 	
-	private List<Area> getChildAreasForArea(Area area){
+	private List<Area> getChildAreas(Area area){
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "parent_id = " +area.getParentId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query("areas", null, "parent_id = " +area.getId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
-				res.add(getArea(c.getInt(2)));
+				res.add(cursorToArea(c));
 				c.moveToNext();
 			}
 		} catch (SQLException e){
@@ -148,13 +148,35 @@ public class StreetsDataSource {
 			if (c != null)
 				c.close();
 		}
-		for(Area reaArea: res){
-			res.addAll(getChildAreasForArea(reaArea));
+		for(Area resArea: res){
+			res.addAll(getChildAreas(resArea));
+		}
+		return res;
+	}
+	
+	private List<Area> getParentAreas(Area area){
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("areas", null, "id = " +area.getParentId(), null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToArea(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		for(Area resArea: res){
+			res.addAll(getParentAreas(resArea));
 		}
 		return res;
 	}
 
-	private String getStreetTypeName(Street street) {
+	private String getTypeName(Street street) {
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("street_types", null, "id = " + street.getType(), null, null, null, null);
@@ -169,7 +191,7 @@ public class StreetsDataSource {
 		return null;
 	}
 	
-	private List<AreaHistory> getHistoryForArea(Area area) {
+	private List<AreaHistory> getHistory(Area area) {
 		List<AreaHistory> res = new LinkedList<AreaHistory>();
 		Cursor c = null;
 		try{
@@ -188,7 +210,7 @@ public class StreetsDataSource {
 		return res;
 	}
 
-	private List<Street> getStreetsForArea(Area area) {
+	private List<Street> getStreets(Area area) {
 		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
 		try{
@@ -207,7 +229,7 @@ public class StreetsDataSource {
 		return res;
 	}
 
-	private String getAreaTypeName(Area area) {
+	private String getTypeName(Area area) {
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("area_types", null, "id = " + area.getType(), null, null, null, null);
