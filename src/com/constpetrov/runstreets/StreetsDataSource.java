@@ -131,6 +131,28 @@ public class StreetsDataSource {
 		}
 		return res;
 	}
+	
+	private List<Area> getAreasForArea(Area area){
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("areas", null, "parent_id = " +area.getParentId(), null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(getArea(c.getInt(2)));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		for(Area reaArea: res){
+			res.addAll(getAreasForArea(reaArea));
+		}
+		return res;
+	}
 
 	private String getStreetTypeName(Street street) {
 		Cursor c = null;
