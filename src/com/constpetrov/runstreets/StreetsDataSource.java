@@ -95,8 +95,22 @@ public class StreetsDataSource {
 	}
 	
 	private List<StreetHistory> getHistoryForStreet(Street street) {
-		// TODO Auto-generated method stub
-		return null;
+		List<StreetHistory> res = new LinkedList<StreetHistory>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("street_history", null, "id_street = " + street.getId(), null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToStreetHistory(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
 	}
 
 	private List<Area> getAreasForStreet(Street street) {
@@ -120,8 +134,22 @@ public class StreetsDataSource {
 	}
 	
 	private List<AreaHistory> getHistoryForArea(Area area) {
-		// TODO Auto-generated method stub
-		return null;
+		List<AreaHistory> res = new LinkedList<AreaHistory>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("area_history", null, "id_area = " + area.getId(), null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToAreaHistory(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
 	}
 
 	private List<Street> getStreetForAreas(Area area) {
