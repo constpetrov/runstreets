@@ -201,8 +201,17 @@ public class StreetsDataSource {
 	}
 	
 	private Street cursorToStreet(Cursor c) {
-		// TODO Auto-generated method stub
-		return null;
+		Street street = new Street();
+		int i = 0;
+		street.setId(c.getInt(i++));
+		street.setCode(c.getInt(i++));
+		street.setName(c.getString(i++));
+		street.setType(c.getInt(i++));
+		street.setDoc(c.getString(i++));
+		street.setSort(c.getString(i++));
+		street.setSort_second(c.getString(i++));
+		street.setPosition(c.getString(i++));
+		return street;
 	}
 	
 	private Area cursorToArea(Cursor c) {
