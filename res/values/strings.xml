@@ -13,5 +13,6 @@
     <string name="title_activity_result_list">ResultListActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_item">ItemActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
