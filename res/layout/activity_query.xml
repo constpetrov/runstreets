@@ -8,9 +8,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".QueryActivity" >
 
-    <TextView
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiAutoCompleteTextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:text="@string/multiautocompletetextview" />
+
+    <ExpandableListView
+        android:id="@+id/expandableListView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/multiAutoCompleteTextView1" >
+
+    </ExpandableListView>
+
+    <ExpandableListView
+        android:id="@+id/expandableListView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expandableListView1" >
+    </ExpandableListView>
 
 </RelativeLayout>
