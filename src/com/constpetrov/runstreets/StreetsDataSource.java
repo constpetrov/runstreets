@@ -312,6 +312,17 @@ public class StreetsDataSource {
 		return null;
 	}
 	
+	private List<String> getStreetTypes(){
+		List<String> res = new LinkedList<String>();
+		Cursor c = dbHelper.getReadableDatabase().query("street_types", new String[]{"name"},"is_old = 0",null,null,null,null);
+		c.moveToFirst();
+		while(!c.isAfterLast()){
+			res.add(c.getString(0));
+			c.moveToNext();
+		}
+		return res;
+	}
+	
 	private Street cursorToStreet(Cursor c) {
 		Street street = new Street();
 		int i = 0;
