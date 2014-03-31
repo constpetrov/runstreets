@@ -1,6 +1,5 @@
 package com.constpetrov.runstreets;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.app.ExpandableListActivity;
 import android.view.Menu;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
