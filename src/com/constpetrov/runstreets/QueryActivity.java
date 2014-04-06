@@ -25,24 +25,24 @@ public class QueryActivity extends Activity {
 		
 		List<Area> groupAreas = dataSource.getAdministrativeStates();
 		
-		ArrayList<OptionItem> groups = new ArrayList<OptionItem>();
-	    List<List<OptionItem>> children = new ArrayList<List<OptionItem>>();
+		ArrayList<OptionItem<Area>> groups = new ArrayList<OptionItem<Area>>();
+	    List<List<OptionItem<Area>>> children = new ArrayList<List<OptionItem<Area>>>();
 	    
 	    
 
 	    for(Area area: groupAreas){
-	    	OptionItem areaItem = new OptionItem(area, area.toString());
+	    	OptionItem<Area> areaItem = new OptionItem<Area>(area, area.toString());
 	    	groups.add(areaItem);
-	    	List<OptionItem> tmp = new LinkedList<OptionItem>();
+	    	List<OptionItem<Area>> tmp = new LinkedList<OptionItem<Area>>();
 	    	for(Area district: dataSource.getChildAreas(area)){
-	    		OptionItem districtItem = new OptionItem(district, district.getDistrictName());
+	    		OptionItem<Area> districtItem = new OptionItem<Area>(district, district.getDistrictName());
 	    		tmp.add(districtItem);
 	    	}
 	    	children.add(tmp);
 	    }
 
 	    ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView1);
-	    elv.setAdapter(new ExpandableAdapter(getLayoutInflater(), groups, children));
+	    elv.setAdapter(new ExpandableAdapter<Area>(getLayoutInflater(), groups, children));
 		
 	}
 

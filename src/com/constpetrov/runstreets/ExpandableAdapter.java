@@ -12,14 +12,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class ExpandableAdapter extends BaseExpandableListAdapter {
+public class ExpandableAdapter<T> extends BaseExpandableListAdapter {
 
-    private List<List<OptionItem>> list;
-    private ArrayList<OptionItem> groups;
+    private List<List<OptionItem<T>>> list;
+    private ArrayList<OptionItem<T>> groups;
     private LayoutInflater inflater;
 
-    public ExpandableAdapter(LayoutInflater inflater, ArrayList<OptionItem> groups,
-            List<List<OptionItem>> children) {
+    public ExpandableAdapter(LayoutInflater inflater, ArrayList<OptionItem<T>> groups,
+            List<List<OptionItem<T>>> children) {
         this.groups = groups;
         this.list = children;
         this.inflater = inflater;

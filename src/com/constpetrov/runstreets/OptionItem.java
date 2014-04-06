@@ -1,24 +1,22 @@
 package com.constpetrov.runstreets;
 
-import com.constpetrov.runstreets.model.Area;
+public class OptionItem<T> {
 
-public class OptionItem {
-
-	private Area area;
+	private T area;
 	private String name;
 	private boolean selected;
 	
-	public OptionItem(Area area, String name) {
+	public OptionItem(T area, String name) {
 		this.area = area;
 	    this.name = name;
 	    selected = false;
 	}
 	
-	public Area getArea() {
+	public T getArea() {
 		return area;
 	}
 
-	public void setArea(Area area) {
+	public void setArea(T area) {
 		this.area = area;
 	}
 
