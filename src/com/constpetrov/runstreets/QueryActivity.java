@@ -1,5 +1,6 @@
 package com.constpetrov.runstreets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,33 +9,41 @@ import java.util.Map;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ExpandableListView;
-import android.widget.SimpleExpandableListAdapter;
 
 public class QueryActivity extends Activity {
-	
-	private String [] groups = {"1","2","3","4","5","6"};
-	
-	private String [][] elements = {
-			{"1.1","1.2","1.3"},
-			{"2.1","2.2","2.3"},
-			{"3.1","3.2","3.3"},
-			{"4.1","4.2","4.3"},
-			{"5.1","5.2","5.3"},
-			{"6.1","6.2","6.3"}
-	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 		
 		
-		SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(this, 
-				createGroupList(), R.layout.child_row, new String []{"groupName"}, new int[] {R.id.checkBox1}, 
-				createChildList(), R.layout.child_row, new String []{"element"}, new int []{R.id.checkBox1});
-		
-		ExpandableListView list = (ExpandableListView)findViewById(R.id.expandableListView1);
-		list.setAdapter(adapter);
+		ArrayList<OptionItem> groups = new ArrayList<OptionItem>();
+	    List<List<OptionItem>> children = new ArrayList<List<OptionItem>>();
+
+	    for (int i = 0; i < 10; i++) {
+	    	OptionItem groupName = new OptionItem("", "Group " + i);
+	        groups.add(groupName);
+	        List<OptionItem> temp = new ArrayList<OptionItem>();
+	        for (int j = 0; j < 5; j++) {
+	            temp.add(new OptionItem(groupName.getChildName(), "Child " + j));
+	        }
+	        children.add(temp);
+	    }
+
+	    children.get(0).get(3).setSelected(true);
+	    children.get(5).get(2).setSelected(true);
+	    children.get(8).get(1).setSelected(true);
+	    children.get(3).get(4).setSelected(true);
+
+	    ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView1);
+	    elv.setAdapter(new ExpandableAdapter(groups, children));
 		
 	}
 
@@ -45,29 +54,148 @@ public class QueryActivity extends Activity {
 		return true;
 	}
 
-	
-	private List<Map<String, String>> createGroupList(){
-		List<Map<String, String>> res = new LinkedList<Map<String, String>>();
-		for(String groupName: groups){
-			Map<String, String> m = new HashMap<String, String>();
-			m.put("groupName", groupName);
-			res.add(m);
-		}
-		return res;
+	public static class ViewHolder {
+	    protected CheckBox cb;
 	}
 	
-	private List<List<Map<String, String>>> createChildList() {
-	      List<List<Map<String, String>>> result = new LinkedList<List<Map<String, String>>>();
-	      for( int i = 0 ; i < elements.length ; i++ ) {
-	// Second-level lists
-	        List<Map<String, String>> secList = new LinkedList<Map<String, String>>();
-	        for( int n = 0 ; n < elements[i].length ; n++ ) {
-	        	HashMap<String, String> child = new HashMap<String, String>();
-	        	child.put( "element", elements[i][n] );
-	            secList.add(child);  
+	public class ExpandableAdapter extends BaseExpandableListAdapter {
+
+	    private List<List<OptionItem>> list;
+	    private ArrayList<OptionItem> groups;
+
+	    public ExpandableAdapter(ArrayList<OptionItem> groups,
+	            List<List<OptionItem>> children) {
+	        this.groups = groups;
+	        this.list = children;
+	    }
+
+	    @Override
+	    public Object getChild(int groupPosition, int childPosition) {
+	        if (list != null && list.size() > groupPosition
+	                && list.get(groupPosition) != null) {
+	            if (list.get(groupPosition).size() > childPosition)
+	                return list.get(groupPosition).get(childPosition);
 	        }
-	        result.add( secList );
-	      }
-	      return result;
+
+	        return null;
+	    }
+
+	    @Override
+	    public long getChildId(int groupPosition, int childPosition) {
+	        return childPosition;
+	    }
+
+	    @Override
+	    public View getChildView(final int groupPosition,
+	            final int childPosition, boolean isLastChild, View convertView,
+	            ViewGroup parent) {
+
+	        View view = null;
+	        if (convertView == null) {
+	            view = getLayoutInflater().inflate(R.layout.child_row, null);
+	            final ViewHolder childHolder = new ViewHolder();
+	            childHolder.cb = (CheckBox) view.findViewById(R.id.checkBox_child);              
+	            childHolder.cb
+	                    .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	                        @Override
+	                        public void onCheckedChanged(CompoundButton button,
+	                                boolean isChecked) {
+	                            OptionItem item = (OptionItem) childHolder.cb
+	                                    .getTag();
+	                            item.setSelected(button.isChecked());
+	                        }
+	                    });
+
+	            view.setTag(childHolder);
+	            childHolder.cb.setTag(list.get(groupPosition).get(childPosition));
+	        } else {
+	            view = convertView;         
+	            ((ViewHolder) view.getTag()).cb.setTag(list.get(groupPosition).get(childPosition));
+	        }
+
+	        ViewHolder holder = (ViewHolder) view.getTag();
+	        holder.cb.setChecked(list.get(groupPosition).get(childPosition)
+	                .isSelected());
+	        holder.cb.setText(list.get(groupPosition).get(childPosition)
+	                .getChildName());
+
+	        return view;
+	    }
+
+	    @Override
+	    public int getChildrenCount(int groupPosition) {
+	        if (list != null && list.size() > groupPosition
+	                && list.get(groupPosition) != null)
+	            return list.get(groupPosition).size();
+
+	        return 0;
+	    }
+
+	    @Override
+	    public Object getGroup(int groupPosition) {
+	        if (groups != null && groups.size() > groupPosition)
+	            return groups.get(groupPosition);
+
+	        return null;
+	    }
+
+	    @Override
+	    public int getGroupCount() {
+	        if (groups != null)
+	            return groups.size();
+
+	        return 0;
+	    }
+
+	    @Override
+	    public long getGroupId(int groupPosition) {
+	        return groupPosition;
+	    }
+
+	    @Override
+	    public View getGroupView(int groupPosition, boolean isExpanded,
+	            View convertView, ViewGroup parent) {
+	    	View view = null;
+	        if (convertView == null) {
+	            view = getLayoutInflater().inflate(R.layout.group_row, null);
+	            final ViewHolder childHolder = new ViewHolder();
+	            childHolder.cb = (CheckBox) view.findViewById(R.id.checkBox_group);              
+	            childHolder.cb
+	                    .setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	                        @Override
+	                        public void onCheckedChanged(CompoundButton button,
+	                                boolean isChecked) {
+	                            OptionItem item = (OptionItem) childHolder.cb
+	                                    .getTag();
+	                            item.setSelected(button.isChecked());
+	                        }
+	                    });
+
+	            view.setTag(childHolder);
+	            childHolder.cb.setTag(groups.get(groupPosition));
+	        } else {
+	            view = convertView;         
+	            ((ViewHolder) view.getTag()).cb.setTag(groups.get(groupPosition));
+	        }
+
+	        ViewHolder holder = (ViewHolder) view.getTag();
+	        holder.cb.setChecked(groups.get(groupPosition)
+	                .isSelected());
+	        holder.cb.setText(groups.get(groupPosition)
+	                .getChildName());
+
+	        return view;
+	    }
+
+	    @Override
+	    public boolean hasStableIds() {
+	        return true;
+	    }
+
+	    @Override
+	    public boolean isChildSelectable(int groupPosition, int childPosition) {
+	        return true;
+	    }
 	}
+	
 }
