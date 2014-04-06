@@ -3,8 +3,10 @@ package com.constpetrov.runstreets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
@@ -272,7 +274,7 @@ public class StreetsDataSource {
 		return null;
 	}
 
-	private List<Street> findStreets(String name){
+	public List<Street> findStreets(String name){
 		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
 		try{
@@ -431,5 +433,21 @@ public class StreetsDataSource {
 				}
 			}
 		}
+	}
+
+	public void filter(List<Street> result, Set<Area> areaFilters) {
+		Set<Integer> districtIds = new HashSet<Integer>();
+		for(Area area: areaFilters){
+			if(area.getType() == 2){
+				for(Area childArea: getChildAreas(area)){
+					districtIds.add(childArea.getId());
+				}
+			}
+			if(area.getType() == 3){
+				districtIds.add(area.getId());
+			}
+		}
+		
+		
 	}
 }
