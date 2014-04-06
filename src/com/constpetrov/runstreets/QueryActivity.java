@@ -31,11 +31,11 @@ public class QueryActivity extends Activity {
 	    
 
 	    for(Area area: groupAreas){
-	    	OptionItem areaItem = new OptionItem("", area.toString());
+	    	OptionItem areaItem = new OptionItem(area, area.toString());
 	    	groups.add(areaItem);
 	    	List<OptionItem> tmp = new LinkedList<OptionItem>();
 	    	for(Area district: dataSource.getChildAreas(area)){
-	    		OptionItem districtItem = new OptionItem("", district.getDistrictName());
+	    		OptionItem districtItem = new OptionItem(district, district.getDistrictName());
 	    		tmp.add(districtItem);
 	    	}
 	    	children.add(tmp);

@@ -73,7 +73,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         holder.cb.setChecked(list.get(groupPosition).get(childPosition)
                 .isSelected());
         holder.cb.setText(list.get(groupPosition).get(childPosition)
-                .getChildName());
+                .getName());
 
         return view;
     }
@@ -138,7 +138,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         holder.cb.setChecked(groups.get(groupPosition)
                 .isSelected());
         holder.cb.setText(groups.get(groupPosition)
-                .getChildName());
+                .getName());
 
         return view;
     }

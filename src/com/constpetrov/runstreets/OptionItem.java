@@ -1,36 +1,37 @@
 package com.constpetrov.runstreets;
 
+import com.constpetrov.runstreets.model.Area;
+
 public class OptionItem {
 
-	private String groupName;
-	private String childName;
+	private Area area;
+	private String name;
 	private boolean selected;
 	
-	public OptionItem(String group, String child) {
-	
-	    this.groupName = group;
-	    this.childName = child;
+	public OptionItem(Area area, String name) {
+		this.area = area;
+	    this.name = name;
 	    selected = false;
 	}
 	
-	public void setGroupName(String name) {
-	    this.groupName = name;
+	public Area getArea() {
+		return area;
 	}
-	
-	public void setChildName(String name) {
-	    this.childName = name;
+
+	public void setArea(Area area) {
+		this.area = area;
+	}
+
+	public void setName(String name) {
+	    this.name = name;
 	}
 	
 	public void setSelected(boolean selected) {
 	    this.selected = selected;
 	}
 	
-	public String getGroupName() {
-	    return groupName;
-	}
-	
-	public String getChildName() {
-	    return childName;
+	public String getName() {
+	    return name;
 	}
 	
 	public boolean isSelected() {
