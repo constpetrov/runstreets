@@ -1,5 +1,9 @@
 package com.constpetrov.runstreets.model;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 public class Area {
 	private int id;
 	private String code;
@@ -42,6 +46,27 @@ public class Area {
 	}
 	public void setDoc(String doc) {
 		this.doc = doc;
+	}
+	
+	@Override
+	public String toString(){
+		return getAbbr();
+	}
+	
+	private String getAbbr() {
+		if(getName().startsWith("Зелен")){
+			return "Зеленоград";
+		}
+		StringTokenizer tokenizer = new StringTokenizer(getName(), " -");
+		StringBuilder b = new StringBuilder();
+		while (tokenizer.hasMoreTokens()){
+			b.append(tokenizer.nextToken().substring(0,1).toUpperCase());
+		}
+		return b.toString();
+	}
+	
+	public String getDistrictName(){
+		return getName().replace("Район ", "").replace(" район", "");
 	}
 	
 }

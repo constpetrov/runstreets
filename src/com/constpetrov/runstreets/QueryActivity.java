@@ -1,37 +1,45 @@
 package com.constpetrov.runstreets;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import com.constpetrov.runstreets.model.Area;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 import android.widget.ExpandableListView;
 
+
+
 public class QueryActivity extends Activity {
+	StreetsDataSource dataSource;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 		
+		dataSource = new StreetsDataSource(this);
+		
+		List<Area> groupAreas = dataSource.getAdministrativeStates();
 		
 		ArrayList<OptionItem> groups = new ArrayList<OptionItem>();
 	    List<List<OptionItem>> children = new ArrayList<List<OptionItem>>();
+	    
+	    
 
-	    for (int i = 0; i < 10; i++) {
-	    	OptionItem groupName = new OptionItem("", "Group " + i);
-	        groups.add(groupName);
-	        List<OptionItem> temp = new ArrayList<OptionItem>();
-	        for (int j = 0; j < 5; j++) {
-	            temp.add(new OptionItem(groupName.getChildName(), "Child " + j));
-	        }
-	        children.add(temp);
+	    for(Area area: groupAreas){
+	    	OptionItem areaItem = new OptionItem("", area.toString());
+	    	groups.add(areaItem);
+	    	List<OptionItem> tmp = new LinkedList<OptionItem>();
+	    	for(Area district: dataSource.getChildAreas(area)){
+	    		OptionItem districtItem = new OptionItem("", district.getDistrictName());
+	    		tmp.add(districtItem);
+	    	}
+	    	children.add(tmp);
 	    }
-
-	    children.get(0).get(3).setSelected(true);
-	    children.get(5).get(2).setSelected(true);
-	    children.get(8).get(1).setSelected(true);
-	    children.get(3).get(4).setSelected(true);
 
 	    ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView1);
 	    elv.setAdapter(new ExpandableAdapter(getLayoutInflater(), groups, children));

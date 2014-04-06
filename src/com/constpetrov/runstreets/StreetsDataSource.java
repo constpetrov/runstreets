@@ -29,6 +29,7 @@ public class StreetsDataSource {
 	public StreetsDataSource(Context context) {
 		dbHelper = new StreetsDBHelper(context);
 		assets = context.getAssets();
+		checkAndCreate();
 	}
 	
 	public List<String> execReadQuery(String query){
@@ -94,6 +95,14 @@ public class StreetsDataSource {
 		return res;
 	}
 	
+	public List<Area> getDistricts(){
+		return getAreas(3);
+	}
+	
+	public List<Area> getAdministrativeStates(){
+		return getAreas(2);
+	}
+	
 	private List<StreetHistory> getHistory(Street street) {
 		List<StreetHistory> res = new LinkedList<StreetHistory>();
 		Cursor c = null;
@@ -132,11 +141,30 @@ public class StreetsDataSource {
 		return res;
 	}
 	
-	private List<Area> getChildAreas(Area area){
+	private List<Area> getAreas(int type) {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "parent_id = " +area.getId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query("areas", null, "type = " +type, null, null, null, null);
+			c.moveToFirst();
+			while (!c.isAfterLast()){
+				res.add(cursorToArea(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+				c.close();
+		}
+		return res;
+	}
+	
+	public List<Area> getChildAreas(Area area){
+		List<Area> res = new LinkedList<Area>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("areas", null, "id_parent = " +area.getId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
