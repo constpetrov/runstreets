@@ -440,8 +440,35 @@ public class StreetsDataSource {
 	public List<Street> findStreets(String name, Set<Area> areas,
 			List<Rename> renames, Set<Integer> types) {
 		String queryHeader = "SELECT * FROM streets";
-		String joinWithAreas = ", street_areas ON id, street";
+		String joinWithAreas = ", street_areas ON streets.id, street_areas.street";
 		String where = " WHERE street_areas.area IN ";
-		return null;
+		StringBuilder areaString = new StringBuilder("(");
+		for(Area area : areas){
+			areaString.append(area.getId()).append(", ");
+		}
+		String inString = "";
+		if(areaString.length() > 1){
+			inString = areaString.substring(0, areaString.lastIndexOf(","));
+			inString = inString + ")";
+		}
+		String nameString = " AND streets.name LIKE %" + name + "%";
+		String fullQuery = queryHeader + joinWithAreas
+							+ where + inString + nameString;
+						
+		List<Street> result = new LinkedList<Street>();
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);
+			c.moveToFirst();
+			while(!c.isAfterLast()){
+				result.add(cursorToStreet(c));
+				c.moveToNext();
+			}
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query");
+		} finally {
+			c.close();
+		}
+		return result;
 	}
 }
