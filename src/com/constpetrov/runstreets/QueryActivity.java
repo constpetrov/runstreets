@@ -56,7 +56,7 @@ public class QueryActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				List<Street> streets = findStreets(getAreaFilters(), getRenameFilters(), getTypeFilters(), getName());
+				List<Street> streets = findStreets(getAreas(), getRenames(), getTypes(), getName());
 				
 			}
 
@@ -65,23 +65,22 @@ public class QueryActivity extends Activity {
 		
 	}
 	
-	protected List<Street> findStreets(Set<Area> areaFilters,
-			List<Rename> renameFilters, Set<Integer> typeFilters, String name) {
-		List<Street> result = dataSource.findStreets(name);
-		dataSource.filter(result, areaFilters);
+	protected List<Street> findStreets(Set<Area> areas,
+			List<Rename> renames, Set<Integer> types, String name) {
+		List<Street> result = dataSource.findStreets(name, areas, renames, types);
 		return result;
 	}
 
-	private Set<Area> getAreaFilters() {
+	private Set<Area> getAreas() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
-	private List<Rename> getRenameFilters(){
+	private List<Rename> getRenames(){
 		return null;
 	}
 	
-	private Set<Integer> getTypeFilters(){
+	private Set<Integer> getTypes(){
 		return null;
 	}
 

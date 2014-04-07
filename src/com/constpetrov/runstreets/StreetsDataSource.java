@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
 import com.constpetrov.runstreets.model.AreaInfo;
+import com.constpetrov.runstreets.model.Rename;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
 import com.constpetrov.runstreets.model.StreetInfo;
@@ -435,19 +437,9 @@ public class StreetsDataSource {
 		}
 	}
 
-	public void filter(List<Street> result, Set<Area> areaFilters) {
-		Set<Integer> districtIds = new HashSet<Integer>();
-		for(Area area: areaFilters){
-			if(area.getType() == 2){
-				for(Area childArea: getChildAreas(area)){
-					districtIds.add(childArea.getId());
-				}
-			}
-			if(area.getType() == 3){
-				districtIds.add(area.getId());
-			}
-		}
-		
-		
+	public List<Street> findStreets(String name, Set<Area> areas,
+			List<Rename> renames, Set<Integer> types) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
