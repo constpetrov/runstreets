@@ -439,7 +439,9 @@ public class StreetsDataSource {
 
 	public List<Street> findStreets(String name, Set<Area> areas,
 			List<Rename> renames, Set<Integer> types) {
-		// TODO Auto-generated method stub
+		String queryHeader = "SELECT * FROM streets";
+		String joinWithAreas = ", street_areas ON id, street";
+		String where = " WHERE street_areas.area IN ";
 		return null;
 	}
 }
