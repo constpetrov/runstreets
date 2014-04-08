@@ -435,12 +435,14 @@ public class StreetsDataSource {
 				}
 			}
 		}
+		
+		//ToDo: add columns with lower case for all UTF columns for search OR modify LIKE function
 	}
 
 	public List<Street> findStreets(String name, Set<Area> areas,
 			List<Rename> renames, Set<Integer> types) {
-		String queryHeader = "SELECT * FROM streets";
-		String joinWithAreas = ", street_areas ON streets.id, street_areas.street";
+		String queryHeader = "SELECT DISTINCT * FROM streets";
+		String joinWithAreas = ", street_areas ON streets.id = street_areas.street";
 		String where = " WHERE street_areas.area IN ";
 		StringBuilder areaString = new StringBuilder("(");
 		for(Area area : areas){
@@ -451,7 +453,7 @@ public class StreetsDataSource {
 			inString = areaString.substring(0, areaString.lastIndexOf(","));
 			inString = inString + ")";
 		}
-		String nameString = " AND streets.name LIKE %" + name + "%";
+		String nameString = " AND (streets.name LIKE \"" + name + "%\" COLLATE NOCASE OR streets.name LIKE \"%" + name+ "%\" COLLATE NOCASE)";
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + inString + nameString;
 						
