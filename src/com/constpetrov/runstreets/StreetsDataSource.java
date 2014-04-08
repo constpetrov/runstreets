@@ -436,7 +436,7 @@ public class StreetsDataSource {
 			}
 		}
 		
-		//ToDo: add columns with lower case for all UTF columns for search OR modify LIKE function
+		//ToDo: add columns with lower case for all UTF columns for search OR modify LIKE function OR capitalize first letter in query parameter
 	}
 
 	public List<Street> findStreets(String name, Set<Area> areas,
