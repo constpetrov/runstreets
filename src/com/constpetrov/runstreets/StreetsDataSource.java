@@ -3,10 +3,13 @@ package com.constpetrov.runstreets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.constpetrov.runstreets.model.Area;
@@ -17,6 +20,8 @@ import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
 import com.constpetrov.runstreets.model.StreetInfo;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
@@ -25,7 +30,21 @@ import android.util.Log;
 
 public class StreetsDataSource {
 	
-	private final String TAG = "StreetsDataSource";
+	private static final String TABLE_AREAS = "areas";
+	private static final String TABLE_STREETS = "streets";
+	private static final String TAG = "StreetsDataSource";
+	private static final String[] STREETS_COLUMNS = {"id", 
+											"code", 
+											"name", 
+											"type", 
+											"doc", 
+											"sort", 
+											"sort_second", 
+											"position"};
+	
+	private static final String[] STREETS_SEARCH_COLUMNS = {"name_lower", 
+											"sort_lower", 
+											"sort_second_lower"};
 	
 	private StreetsDBHelper dbHelper;
 	private AssetManager assets;
@@ -149,7 +168,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "type = " +type, null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "type = " +type, null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -168,7 +187,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id_parent = " +area.getId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id_parent = " +area.getId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -190,7 +209,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id = " +area.getParentId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id = " +area.getParentId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -280,7 +299,7 @@ public class StreetsDataSource {
 		List<Street> res = new LinkedList<Street>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("streets", null, "name like %?s%", new String [] {name}, null, null, "sort");
+			c = dbHelper.getReadableDatabase().query(TABLE_STREETS, null, "name like %?s%", new String [] {name}, null, null, "sort");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToStreet(c));
@@ -298,7 +317,7 @@ public class StreetsDataSource {
 	private Street getStreet(int id){
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("streets", null, "id = " + id, null, null, null, "sort");
+			c = dbHelper.getReadableDatabase().query(TABLE_STREETS, null, "id = " + id, null, null, null, "sort");
 			c.moveToFirst();
 			return cursorToStreet(c);
 		} catch (SQLException e){
@@ -314,7 +333,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "name like %?s%", new String [] {name}, null, null, "name");
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "name like %?s%", new String [] {name}, null, null, "name");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -332,7 +351,7 @@ public class StreetsDataSource {
 	private Area getArea(int id){
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id = "+id, null, null, null, "name");
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id = "+id, null, null, null, "name");
 			c.moveToFirst();
 			return cursorToArea(c);
 		} catch (SQLException e){
@@ -435,8 +454,46 @@ public class StreetsDataSource {
 				}
 			}
 		}
-		
-		//ToDo: add columns with lower case for all UTF columns for search OR modify LIKE function OR capitalize first letter in query parameter
+		addSearchColumnsToStreets();
+	}
+	
+	@SuppressLint("DefaultLocale")
+	private void addSearchColumnsToStreets(){
+		boolean success = true;
+		for(String column: STREETS_SEARCH_COLUMNS){
+			success = success && addColumn(TABLE_STREETS, column, "TEXT");
+		}
+		if(!success){
+			return;
+		}
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query(TABLE_STREETS, null, "*", null, null, null, null);
+			c.moveToFirst();
+			while(!c.isAfterLast()){
+				ContentValues update = new ContentValues();
+				update.put(STREETS_SEARCH_COLUMNS[0], c.getString(2).toLowerCase());
+				update.put(STREETS_SEARCH_COLUMNS[1], c.getString(5).toLowerCase());
+				update.put(STREETS_SEARCH_COLUMNS[2], c.getString(6).toLowerCase());
+				dbHelper.getWritableDatabase().update(TABLE_STREETS, update, "id = ?s", new String[] {String.valueOf(c.getInt(0))});
+			}
+		} catch (SQLException ex){
+			Log.e(TAG, "Cannot execute query");
+		} finally {
+			if (c!= null){
+				c.close();
+			}
+		}
+	}
+	
+	private boolean addColumn(String table, String column, String type){
+		try{
+			dbHelper.getWritableDatabase().execSQL(String.format("ALTER TABLE %s ADD COLUMN '%s' %s", table, column, type));
+		} catch (SQLException ex){
+			Log.e(TAG, "Cannot execute query");
+			return false;
+		}
+		return true;
 	}
 
 	public List<Street> findStreets(String name, Set<Area> areas,
@@ -453,11 +510,11 @@ public class StreetsDataSource {
 			inString = areaString.substring(0, areaString.lastIndexOf(","));
 			inString = inString + ")";
 		}
-		String nameString = " AND (streets.name LIKE \"" + name + "%\" COLLATE NOCASE OR streets.name LIKE \"%" + name+ "%\" COLLATE NOCASE)";
+		String nameString = " AND (streets.name_lower LIKE \"" + name + "%\" OR streets.name_lower LIKE \"%" + name+ "%\")";
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + inString + nameString;
 						
-		List<Street> result = new LinkedList<Street>();
+		List<Street> result = new ArrayList<Street>();
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);
@@ -469,7 +526,9 @@ public class StreetsDataSource {
 		} catch (SQLException e){
 			Log.e(TAG, "Cannot execute query");
 		} finally {
-			c.close();
+			if(c != null){
+				c.close();
+			}
 		}
 		return result;
 	}

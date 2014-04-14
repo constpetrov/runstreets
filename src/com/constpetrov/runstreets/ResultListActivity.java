@@ -1,7 +1,12 @@
 package com.constpetrov.runstreets;
 
+import java.util.List;
+
+import com.constpetrov.runstreets.model.Street;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
@@ -14,6 +19,8 @@ public class ResultListActivity extends Activity {
 		setContentView(R.layout.activity_result_list);
 		// Show the Up button in the action bar.
 		setupActionBar();
+		Intent intent =getIntent();
+		List<Street> streets = intent.getParcelableArrayListExtra(QueryActivity.QUERY_RESULT);
 	}
 
 	/**
