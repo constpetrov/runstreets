@@ -24,7 +24,7 @@ import android.database.SQLException;
 import android.util.Log;
 
 public class StreetsDataSource {
-
+	
 	private final String TAG = "StreetsDataSource";
 	
 	private StreetsDBHelper dbHelper;
