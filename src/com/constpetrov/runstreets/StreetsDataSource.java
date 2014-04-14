@@ -508,7 +508,7 @@ public class StreetsDataSource {
 			inString = areaString.substring(0, areaString.lastIndexOf(","));
 			inString = inString + ")";
 		}
-		String nameString = " AND (streets.name LIKE \"" + name + "%\" COLLATE NOCASE OR streets.name LIKE \"%" + name+ "%\" COLLATE NOCASE)";
+		String nameString = " AND (streets.name_lower LIKE \"" + name + "%\" OR streets.name_lower LIKE \"%" + name+ "%\")";
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + inString + nameString;
 						
