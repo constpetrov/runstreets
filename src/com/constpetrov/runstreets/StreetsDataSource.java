@@ -30,8 +30,8 @@ import android.util.Log;
 public class StreetsDataSource {
 	
 	private static final String TABLE_STREETS = "streets";
-	private final String TAG = "StreetsDataSource";
-	private final String[] STREETS_COLUMNS = {"id", 
+	private static final String TAG = "StreetsDataSource";
+	private static final String[] STREETS_COLUMNS = {"id", 
 											"code", 
 											"name", 
 											"type", 
@@ -40,7 +40,7 @@ public class StreetsDataSource {
 											"sort_second", 
 											"position"};
 	
-	private final String[] STREETS_SEARCH_COLUMNS = {"name_lower", 
+	private static final String[] STREETS_SEARCH_COLUMNS = {"name_lower", 
 											"sort_lower", 
 											"sort_second_lower"};
 	
