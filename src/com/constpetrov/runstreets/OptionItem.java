@@ -12,11 +12,11 @@ public class OptionItem<T> {
 	    selected = false;
 	}
 	
-	public T getArea() {
+	public T getItem() {
 		return area;
 	}
 
-	public void setArea(T area) {
+	public void setItem(T area) {
 		this.area = area;
 	}
 
