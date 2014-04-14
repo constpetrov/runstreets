@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 public class QueryActivity extends Activity {
 	
+	public static final String QUERY_RESULT = "queryResult";
+
 	private StreetsDataSource dataSource;
 	
 	private ArrayList<OptionItem<Area>> groups;
@@ -67,7 +69,7 @@ public class QueryActivity extends Activity {
 				List<Street> streets = findStreets(getAreas(), getRenames(), getTypes(), getName());
 				Toast.makeText(QueryActivity.this, "Streets found: "+ streets.size(), Toast.LENGTH_SHORT).show();
 				Intent showResults = new Intent(QueryActivity.this, ResultListActivity.class);
-				showResults.putParcelableArrayListExtra("queryResult", (ArrayList<Street>)streets);
+				showResults.putParcelableArrayListExtra(QUERY_RESULT, (ArrayList<Street>)streets);
 				QueryActivity.this.startActivity(showResults);
 			}
 
