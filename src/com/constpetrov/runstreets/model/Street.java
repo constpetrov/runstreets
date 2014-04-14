@@ -1,6 +1,9 @@
 package com.constpetrov.runstreets.model;
 
-public class Street {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Street implements Parcelable{
 	private int id;
 	private int code;
 	private String name;
@@ -56,6 +59,34 @@ public class Street {
 	}
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeInt(code);
+		dest.writeString(name);
+		dest.writeInt(type);
+		dest.writeString(doc);
+		dest.writeString(sort);
+		dest.writeString(sort_second);
+		dest.writeString(position);
+	}
+	
+	private void Street(Parcel in){
+		id = in.readInt();
+		code = in.readInt();
+		name = in.readString();
+		type = in.readInt();
+		doc = in.readString();
+		sort = in.readString();
+		sort_second = in.readString();
+		position = in.readString();
 	}
 
 }

@@ -3,6 +3,7 @@ package com.constpetrov.runstreets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import android.util.Log;
 
 public class StreetsDataSource {
 	
+	private static final String TABLE_AREAS = "areas";
 	private static final String TABLE_STREETS = "streets";
 	private static final String TAG = "StreetsDataSource";
 	private static final String[] STREETS_COLUMNS = {"id", 
@@ -166,7 +168,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "type = " +type, null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "type = " +type, null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -185,7 +187,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id_parent = " +area.getId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id_parent = " +area.getId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -207,7 +209,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id = " +area.getParentId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id = " +area.getParentId(), null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -331,7 +333,7 @@ public class StreetsDataSource {
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "name like %?s%", new String [] {name}, null, null, "name");
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "name like %?s%", new String [] {name}, null, null, "name");
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -349,7 +351,7 @@ public class StreetsDataSource {
 	private Area getArea(int id){
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query("areas", null, "id = "+id, null, null, null, "name");
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id = "+id, null, null, null, "name");
 			c.moveToFirst();
 			return cursorToArea(c);
 		} catch (SQLException e){
@@ -512,7 +514,7 @@ public class StreetsDataSource {
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + inString + nameString;
 						
-		List<Street> result = new LinkedList<Street>();
+		List<Street> result = new ArrayList<Street>();
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);

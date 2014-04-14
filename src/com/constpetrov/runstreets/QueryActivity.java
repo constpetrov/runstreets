@@ -13,6 +13,7 @@ import com.constpetrov.runstreets.model.Street;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -65,6 +66,9 @@ public class QueryActivity extends Activity {
 			public void onClick(View v) {
 				List<Street> streets = findStreets(getAreas(), getRenames(), getTypes(), getName());
 				Toast.makeText(QueryActivity.this, "Streets found: "+ streets.size(), Toast.LENGTH_SHORT).show();
+				Intent showResults = new Intent(QueryActivity.this, ResultListActivity.class);
+				showResults.putParcelableArrayListExtra("queryResult", (ArrayList<Street>)streets);
+				QueryActivity.this.startActivity(showResults);
 			}
 
 			
