@@ -6,12 +6,14 @@ import com.constpetrov.runstreets.model.Street;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ExpandableListActivity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class ResultListActivity extends Activity {
+public class ResultListActivity extends ExpandableListActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,7 @@ public class ResultListActivity extends Activity {
 		setupActionBar();
 		Intent intent =getIntent();
 		List<Street> streets = intent.getParcelableArrayListExtra(QueryActivity.QUERY_RESULT);
+		setListAdapter(new ExpandableResListAdapter(getLayoutInflater(), streets, null));
 	}
 
 	/**

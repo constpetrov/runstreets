@@ -80,7 +80,8 @@ public class QueryActivity extends Activity {
 	
 	protected List<Street> findStreets(Set<Area> areas,
 			List<Rename> renames, Set<Integer> types, String name) {
-		List<Street> result = dataSource.findStreets(name, areas, renames, types);
+		List<Street> result = new ArrayList<Street>();
+		result.addAll(dataSource.findStreets(name, areas, renames, types));
 		return result;
 	}
 

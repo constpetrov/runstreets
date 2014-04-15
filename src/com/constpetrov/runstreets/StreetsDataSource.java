@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -501,7 +502,7 @@ public class StreetsDataSource {
 		return true;
 	}
 
-	public List<Street> findStreets(String name, Set<Area> areas,
+	public Collection<Street> findStreets(String name, Set<Area> areas,
 			List<Rename> renames, Set<Integer> types) {
 		String queryHeader = "SELECT DISTINCT * FROM streets";
 		String joinWithAreas = ", street_areas ON streets.id = street_areas.street";
@@ -519,7 +520,7 @@ public class StreetsDataSource {
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + (areas.size() != 0 ? inString : "") + nameString;
 						
-		List<Street> result = new ArrayList<Street>();
+		Set<Street> result = new HashSet<Street>();
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);

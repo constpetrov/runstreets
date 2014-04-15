@@ -14,9 +14,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class ExpandableCheckboxAdapter<T> extends BaseExpandableListAdapter {
 
-    private List<List<OptionItem<T>>> list;
-    private ArrayList<OptionItem<T>> groups;
-    private LayoutInflater inflater;
+    private final List<List<OptionItem<T>>> list;
+    private final ArrayList<OptionItem<T>> groups;
+    private final LayoutInflater inflater;
 
     public ExpandableCheckboxAdapter(LayoutInflater inflater, ArrayList<OptionItem<T>> groups,
             List<List<OptionItem<T>>> children) {
