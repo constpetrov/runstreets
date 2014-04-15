@@ -59,7 +59,7 @@ public class QueryActivity extends Activity {
 	    }
 
 	    ExpandableListView elv = (ExpandableListView) findViewById(R.id.expandableListView1);
-	    elv.setAdapter(new ExpandableAdapter<Area>(getLayoutInflater(), groups, children));
+	    elv.setAdapter(new ExpandableCheckboxAdapter<Area>(getLayoutInflater(), groups, children));
 	    
 	    final Button findButton = (Button)findViewById(R.id.button1);
 	    findButton.setOnClickListener(new View.OnClickListener() {
