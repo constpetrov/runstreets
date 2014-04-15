@@ -4,19 +4,19 @@
     android:layout_height="match_parent" >
     
     <ListView android:id="@+id/renames"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         />
-    <TextView android:id="@+id/houses"
+    <!-- <TextView android:id="@+id/houses"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/renames"
-        android:layout_alignLeft="@id/renames"/>
+        android:layout_alignLeft="@id/renames"/> -->
     <TextView android:id="@+id/areas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/houses"
+        android:layout_below="@id/renames"
         android:layout_alignLeft="@id/renames"/>
 
 </RelativeLayout>

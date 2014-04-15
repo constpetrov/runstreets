@@ -47,17 +47,16 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
             final int childPosition, boolean isLastChild, View convertView,
             ViewGroup parent) {
 		View view = null;
-		HistoryAdapter listAdapter = new HistoryAdapter(infos.get(groupPosition).get(childPosition).getHistory(), inflater);
+		StreetInfo info = infos.get(groupPosition).get(childPosition);
+		HistoryAdapter listAdapter = new HistoryAdapter(info.getHistory(), inflater);
 		ListView renameList = null;
         if (convertView == null) {
             view = inflater.inflate(R.layout.result_subitem, null);
-            renameList = (ListView)view.findViewById(R.id.renames);
-            renameList.setAdapter(listAdapter);
         } else {
             view = convertView; 
-            renameList = (ListView)view.findViewById(R.id.renames);
-            renameList.setAdapter(listAdapter);
         }
+        renameList = (ListView)view.findViewById(R.id.renames);
+        renameList.setAdapter(listAdapter);
 		
         int totalHeight = 0;
         for (int i = 0; i < listAdapter.getCount(); i++) {
@@ -70,6 +69,17 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
         params.height = totalHeight + (renameList.getDividerHeight() * (listAdapter.getCount() - 1));
         renameList.setLayoutParams(params);
         renameList.requestLayout();
+        
+        TextView areasView = (TextView)view.findViewById(R.id.areas);
+        StringBuilder areaSB =new StringBuilder("Районы:\n");
+        if(info.getAreas() != null)
+        for(int i =0; i < info.getAreas().size(); i++){
+        	areaSB.append(info.getAreas().get(i).getName());
+        	if(i != info.getAreas().size() - 1){
+        		areaSB.append(", ");
+        	}
+        }
+        areasView.setText(areaSB.toString());
         return view;
 	}
 

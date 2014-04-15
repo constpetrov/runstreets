@@ -22,7 +22,7 @@ public class StreetHistory {
 		this.streetId = streetId;
 	}
 	public String getName() {
-		return name;
+		return name.substring(0, name.lastIndexOf(" "));
 	}
 	public void setName(String name) {
 		this.name = name;
