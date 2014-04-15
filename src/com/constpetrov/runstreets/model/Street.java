@@ -76,7 +76,7 @@ public class Street implements Parcelable{
 	
 	@Override
 	public String toString(){	
-		return name;
+		return sort + (sort_second != null ? " " + sort_second : "");
 	}
 	
 	

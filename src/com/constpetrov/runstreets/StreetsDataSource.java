@@ -49,8 +49,20 @@ public class StreetsDataSource {
 	
 	private StreetsDBHelper dbHelper;
 	private AssetManager assets;
+	
+	private static StreetsDataSource instance;
+	
+	public static synchronized StreetsDataSource get(Context... contexts){
+		if(instance == null){
+			if(contexts.length < 1){
+				throw new IllegalArgumentException();
+			}
+			instance = new StreetsDataSource(contexts[0]);
+		}
+		return instance;
+	}
 
-	public StreetsDataSource(Context context) {
+	private StreetsDataSource(Context context) {
 		dbHelper = new StreetsDBHelper(context);
 		assets = context.getAssets();
 		checkAndCreate();
@@ -127,7 +139,7 @@ public class StreetsDataSource {
 		return getAreas(2);
 	}
 	
-	private List<StreetHistory> getHistory(Street street) {
+	public List<StreetHistory> getHistory(Street street) {
 		List<StreetHistory> res = new LinkedList<StreetHistory>();
 		Cursor c = null;
 		try{
@@ -228,7 +240,7 @@ public class StreetsDataSource {
 		return res;
 	}
 
-	private String getTypeName(Street street) {
+	public String getTypeName(Street street) {
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().query("street_types", null, "id = " + street.getType(), null, null, null, null);

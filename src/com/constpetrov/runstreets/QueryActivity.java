@@ -38,7 +38,7 @@ public class QueryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 		
-		dataSource = new StreetsDataSource(this);
+		dataSource = StreetsDataSource.get(this);
 		
 		List<Area> groupAreas = dataSource.getAdministrativeStates();
 		

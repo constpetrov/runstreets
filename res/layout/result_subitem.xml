@@ -12,13 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/renames"
-        android:layout_alignLeft="@id/renames"
-        android:text="1,4,6,7,5,3,6,4,3,6756,34,45"/>
+        android:layout_alignLeft="@id/renames"/>
     <TextView android:id="@+id/areas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/houses"
-        android:layout_alignLeft="@id/renames"
-        android:text="1,4,6,7,5,3,6,4,3,6756,34,45"/>
+        android:layout_alignLeft="@id/renames"/>
 
 </RelativeLayout>

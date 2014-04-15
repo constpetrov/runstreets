@@ -1,5 +1,6 @@
 package com.constpetrov.runstreets;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.constpetrov.runstreets.model.Street;

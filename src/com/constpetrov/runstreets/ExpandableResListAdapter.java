@@ -100,6 +100,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
             TextView typeView = (TextView)view.findViewById(R.id.street_type);
             
             nameView.setText(streets.get(groupPosition).toString());
+            typeView.setText(StreetsDataSource.get().getTypeName(streets.get(groupPosition)));
             
         } else {
             view = convertView;         
