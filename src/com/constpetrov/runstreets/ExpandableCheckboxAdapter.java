@@ -48,7 +48,7 @@ public class ExpandableCheckboxAdapter<T> extends BaseExpandableListAdapter {
 
         View view = null;
         if (convertView == null) {
-            view = inflater.inflate(R.layout.child_row, null);
+            view = inflater.inflate(R.layout.checkbox_child_row, null);
             final ViewHolder childHolder = new ViewHolder();
             childHolder.cb = (CheckBox) view.findViewById(R.id.checkBox_child);              
             childHolder.cb
@@ -113,7 +113,7 @@ public class ExpandableCheckboxAdapter<T> extends BaseExpandableListAdapter {
             View convertView, ViewGroup parent) {
     	View view = null;
         if (convertView == null) {
-            view = inflater.inflate(R.layout.group_row, null);
+            view = inflater.inflate(R.layout.checkbox_group_row, null);
             final ViewHolder childHolder = new ViewHolder();
             childHolder.cb = (CheckBox) view.findViewById(R.id.checkBox_group);              
             childHolder.cb

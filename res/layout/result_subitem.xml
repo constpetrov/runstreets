@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    
+    <ListView android:id="@+id/renames"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        />
+    <TextView android:id="@+id/houses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/renames"
+        android:layout_alignLeft="@id/renames"
+        android:text="1,4,6,7,5,3,6,4,3,6756,34,45"/>
+    <TextView android:id="@+id/areas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/houses"
+        android:layout_alignLeft="@id/renames"
+        android:text="1,4,6,7,5,3,6,4,3,6756,34,45"/>
+
+</RelativeLayout>
