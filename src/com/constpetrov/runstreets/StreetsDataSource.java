@@ -468,14 +468,19 @@ public class StreetsDataSource {
 		}
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query(TABLE_STREETS, null, "*", null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_STREETS, null, null, null, null, null, null);
 			c.moveToFirst();
 			while(!c.isAfterLast()){
 				ContentValues update = new ContentValues();
 				update.put(STREETS_SEARCH_COLUMNS[0], c.getString(2).toLowerCase());
-				update.put(STREETS_SEARCH_COLUMNS[1], c.getString(5).toLowerCase());
-				update.put(STREETS_SEARCH_COLUMNS[2], c.getString(6).toLowerCase());
-				dbHelper.getWritableDatabase().update(TABLE_STREETS, update, "id = ?s", new String[] {String.valueOf(c.getInt(0))});
+				if(c.getString(5) != null){
+					update.put(STREETS_SEARCH_COLUMNS[1], c.getString(5).toLowerCase());
+				}
+				if(c.getString(6) != null){
+					update.put(STREETS_SEARCH_COLUMNS[2], c.getString(6).toLowerCase());
+				}
+				dbHelper.getWritableDatabase().update(TABLE_STREETS, update, "id = ?", new String[] {String.valueOf(c.getInt(0))});
+				c.moveToNext();
 			}
 		} catch (SQLException ex){
 			Log.e(TAG, "Cannot execute query");
@@ -500,19 +505,19 @@ public class StreetsDataSource {
 			List<Rename> renames, Set<Integer> types) {
 		String queryHeader = "SELECT DISTINCT * FROM streets";
 		String joinWithAreas = ", street_areas ON streets.id = street_areas.street";
-		String where = " WHERE street_areas.area IN ";
-		StringBuilder areaString = new StringBuilder("(");
+		String where = " WHERE";
+		StringBuilder areaString = new StringBuilder(" street_areas.area IN (");
 		for(Area area : areas){
 			areaString.append(area.getId()).append(", ");
 		}
 		String inString = "";
-		if(areaString.length() > 1){
+		if(areas.size() > 0){
 			inString = areaString.substring(0, areaString.lastIndexOf(","));
-			inString = inString + ")";
+			inString = inString + ") AND";
 		}
-		String nameString = " AND (streets.name_lower LIKE \"" + name + "%\" OR streets.name_lower LIKE \"%" + name+ "%\")";
+		String nameString = " (streets.name_lower LIKE \"" + name + "%\" OR streets.name_lower LIKE \"%" + name+ "%\")";
 		String fullQuery = queryHeader + joinWithAreas
-							+ where + inString + nameString;
+							+ where + (areas.size() != 0 ? inString : "") + nameString;
 						
 		List<Street> result = new ArrayList<Street>();
 		Cursor c = null;

@@ -12,6 +12,19 @@ public class Street implements Parcelable{
 	private String sort;
 	private String sort_second;
 	private String position;
+	
+	public final static Parcelable.Creator<Street> CREATOR = new Parcelable.Creator<Street>(){
+
+		@Override
+		public Street createFromParcel(Parcel source) {
+			return new Street(source);
+		}
+
+		@Override
+		public Street[] newArray(int size) {
+			return new Street[size];
+		}}; 
+	
 	public int getId() {
 		return id;
 	}
@@ -78,7 +91,7 @@ public class Street implements Parcelable{
 		dest.writeString(position);
 	}
 	
-	private void Street(Parcel in){
+	public Street(Parcel in){
 		id = in.readInt();
 		code = in.readInt();
 		name = in.readString();
@@ -87,6 +100,9 @@ public class Street implements Parcelable{
 		sort = in.readString();
 		sort_second = in.readString();
 		position = in.readString();
+	}
+	public Street() {
+		
 	}
 
 }
