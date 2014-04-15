@@ -47,15 +47,29 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
             final int childPosition, boolean isLastChild, View convertView,
             ViewGroup parent) {
 		View view = null;
-        if (true/*convertView == null*/) {
+		HistoryAdapter listAdapter = new HistoryAdapter(infos.get(groupPosition).get(childPosition).getHistory(), inflater);
+		ListView renameList = null;
+        if (convertView == null) {
             view = inflater.inflate(R.layout.result_subitem, null);
-            ListView renameList = (ListView)view.findViewById(R.id.renames);
-            renameList.setAdapter(new HistoryAdapter(infos.get(groupPosition).get(childPosition).getHistory(), inflater));
+            renameList = (ListView)view.findViewById(R.id.renames);
+            renameList.setAdapter(listAdapter);
         } else {
-            view = convertView;         
+            view = convertView; 
+            renameList = (ListView)view.findViewById(R.id.renames);
+            renameList.setAdapter(listAdapter);
         }
-        
-        
+		
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, renameList);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = renameList.getLayoutParams();
+        params.height = totalHeight + (renameList.getDividerHeight() * (listAdapter.getCount() - 1));
+        renameList.setLayoutParams(params);
+        renameList.requestLayout();
         return view;
 	}
 
