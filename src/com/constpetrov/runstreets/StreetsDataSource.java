@@ -117,6 +117,16 @@ public class StreetsDataSource {
 		return res;
 	}
 	
+	public StreetInfo getStreetInfo(int id){
+		Street street = getStreet(id);
+		StreetInfo info = new StreetInfo();
+		info.setStreet(street);
+		info.setStreetTypeName(getTypeName(street));
+		info.setAreas(getAreas(street));
+		info.setHistory(getHistory(street));
+		return info;
+	}
+	
 	public List<AreaInfo> getAreaInfos(String name){
 		List<AreaInfo> res = new LinkedList<AreaInfo>();
 		List<Area> areas = findAreas(name);
@@ -241,18 +251,7 @@ public class StreetsDataSource {
 	}
 
 	public String getTypeName(Street street) {
-		Cursor c = null;
-		try{
-			c = dbHelper.getReadableDatabase().query("street_types", null, "id = " + street.getType(), null, null, null, null);
-			c.moveToFirst();
-			return c.getString(2);
-		} catch (SQLException e){
-			Log.e(TAG, "Cannot execute query", e);
-		} finally {
-			if (c != null)
-			c.close();
-		}
-		return null;
+		return getStreetTypeName(street.getType());
 	}
 	
 	private List<AreaHistory> getHistory(Area area) {
@@ -549,5 +548,20 @@ public class StreetsDataSource {
 			}
 		}
 		return result;
+	}
+
+	public String getStreetTypeName(int type) {
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query("street_types", null, "id = " + type, null, null, null, null);
+			c.moveToFirst();
+			return c.getString(2);
+		} catch (SQLException e){
+			Log.e(TAG, "Cannot execute query", e);
+		} finally {
+			if (c != null)
+			c.close();
+		}
+		return null;
 	}
 }

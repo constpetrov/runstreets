@@ -2,40 +2,39 @@ package com.constpetrov.runstreets;
 
 import java.util.List;
 
-import com.constpetrov.runstreets.ExpandableCheckboxAdapter.ViewHolder;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
+import com.constpetrov.runstreets.model.StreetInfo;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 
 	private final List<Street> streets;
-	private final List<List<StreetHistory>> history;
+	private final List<List<StreetInfo>> infos;
 	private final LayoutInflater inflater;
 	
-	public ExpandableResListAdapter(LayoutInflater inflater, List<Street> streets, List<List<StreetHistory>> history){
+	public ExpandableResListAdapter(LayoutInflater inflater, List<Street> streets, List<List<StreetInfo>> infos){
 		this.streets = streets;
-		this.history = history;
+		this.infos = infos;
 		this.inflater = inflater;
 	}
 	
 	@Override
 	public Object getChild(int arg0, int arg1) {
-		if(history == null || history.size() < arg0){
+		if(infos == null || infos.size() < arg0){
 			return null;
 		}
-		if(history.get(arg0) == null || history.get(arg0).size() < arg1){
+		if(infos.get(arg0) == null || infos.get(arg0).size() < arg1){
 			return null;
 		}
-		return history.get(arg0).get(arg1);
+		return infos.get(arg0).get(arg1);
 	}
 
 	@Override
@@ -48,10 +47,10 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
             final int childPosition, boolean isLastChild, View convertView,
             ViewGroup parent) {
 		View view = null;
-        if (convertView == null) {
+        if (true/*convertView == null*/) {
             view = inflater.inflate(R.layout.result_subitem, null);
-            
-            
+            ListView renameList = (ListView)view.findViewById(R.id.renames);
+            renameList.setAdapter(new HistoryAdapter(infos.get(groupPosition).get(childPosition).getHistory(), inflater));
         } else {
             view = convertView;         
         }
@@ -62,9 +61,9 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public int getChildrenCount(int arg0) {
-		if (history != null && history.size() > arg0
-                && history.get(arg0) != null)
-            return history.get(arg0).size();
+		if (infos != null && infos.size() > arg0
+                && infos.get(arg0) != null)
+            return infos.get(arg0).size();
 
         return 0;
 	}

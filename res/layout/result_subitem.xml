@@ -5,7 +5,7 @@
     
     <ListView android:id="@+id/renames"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginLeft="16dp"
         />
     <TextView android:id="@+id/houses"

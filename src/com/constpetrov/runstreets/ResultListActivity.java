@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.constpetrov.runstreets.model.Street;
+import com.constpetrov.runstreets.model.StreetInfo;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -24,7 +25,13 @@ public class ResultListActivity extends ExpandableListActivity {
 		setupActionBar();
 		Intent intent =getIntent();
 		List<Street> streets = intent.getParcelableArrayListExtra(QueryActivity.QUERY_RESULT);
-		setListAdapter(new ExpandableResListAdapter(getLayoutInflater(), streets, null));
+		List<List<StreetInfo>> infos = new LinkedList<List<StreetInfo>>();
+		for(Street street: streets){
+			List<StreetInfo> infoList = new LinkedList<StreetInfo>();
+			infos.add(infoList);
+			infoList.add(StreetsDataSource.get().getStreetInfo(street.getId()));
+		}
+		setListAdapter(new ExpandableResListAdapter(getLayoutInflater(), streets, infos));
 	}
 
 	/**

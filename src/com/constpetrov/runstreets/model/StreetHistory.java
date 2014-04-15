@@ -1,5 +1,8 @@
 package com.constpetrov.runstreets.model;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StreetHistory {
 	private int id;
 	private int streetId;
@@ -35,6 +38,15 @@ public class StreetHistory {
 	}
 	public void setDoc(String doc) {
 		this.doc = doc;
+	}
+	
+	public String getYear(){
+		Pattern p = Pattern.compile(".*(\\d{4}).*");
+		Matcher m = p.matcher(doc);
+		if(m.matches()){
+			return m.group(1);
+		}
+		return "";
 	}
 	
 
