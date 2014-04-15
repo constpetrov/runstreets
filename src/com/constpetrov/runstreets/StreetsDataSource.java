@@ -520,6 +520,9 @@ public class StreetsDataSource {
 		String where = " WHERE";
 		StringBuilder areaString = new StringBuilder(" street_areas.area IN (");
 		for(Area area : areas){
+			areas.addAll(getChildAreas(area));
+		}
+		for(Area area : areas){
 			areaString.append(area.getId()).append(", ");
 		}
 		String inString = "";
