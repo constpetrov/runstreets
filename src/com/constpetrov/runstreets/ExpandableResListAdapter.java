@@ -58,17 +58,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
         renameList = (ListView)view.findViewById(R.id.renames);
         renameList.setAdapter(listAdapter);
 		
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, renameList);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = renameList.getLayoutParams();
-        params.height = totalHeight + (renameList.getDividerHeight() * (listAdapter.getCount() - 1));
-        renameList.setLayoutParams(params);
-        renameList.requestLayout();
+        Utils.setListViewHeightBasedOnChildren(renameList);
         
         TextView areasView = (TextView)view.findViewById(R.id.areas);
         StringBuilder areaSB =new StringBuilder("Районы:\n");
