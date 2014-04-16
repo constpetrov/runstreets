@@ -78,25 +78,25 @@ public class QueryActivity extends Activity {
 		});
 	}
 	
-	protected void findStreets(Set<Area> areas,
+	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name) {
 		List<Street> result = new ArrayList<Street>();
-		SearchParameters params = new SearchParameters(name, areas);
+		SearchParameters params = new SearchParameters(name, null, areas, 0, 0);
 		ExecQuery query = new ExecQuery();
 		query.execute(params);
 	}
 
-	private Set<Area> getAreas() {
-		Set<Area> result = new HashSet<Area>();
+	private Set<Integer> getAreas() {
+		Set<Integer> result = new HashSet<Integer>();
 		for(OptionItem<Area> oi: groups){
 			if(oi.isSelected()){
-				result.add(oi.getItem());
+				result.add(oi.getItem().getId());
 			}
 		}
 		for(List<OptionItem<Area>> childGroup: children){
 			for(OptionItem<Area> oi: childGroup){
 				if(oi.isSelected()){
-					result.add(oi.getItem());
+					result.add(oi.getItem().getId());
 				}
 			}
 		}

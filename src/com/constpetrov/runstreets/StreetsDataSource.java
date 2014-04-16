@@ -206,10 +206,14 @@ public class StreetsDataSource {
 	}
 	
 	public List<Area> getChildAreas(Area area){
+		return getChildAreas(area.getId());
+	}
+	
+	public List<Area> getChildAreas(Integer area){
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
 		try{
-			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id_parent = " +area.getId(), null, null, null, null);
+			c = dbHelper.getReadableDatabase().query(TABLE_AREAS, null, "id_parent = " +area, null, null, null, null);
 			c.moveToFirst();
 			while (!c.isAfterLast()){
 				res.add(cursorToArea(c));
@@ -222,7 +226,7 @@ public class StreetsDataSource {
 				c.close();
 		}
 		for(Area resArea: res){
-			res.addAll(getChildAreas(resArea));
+			res.addAll(getChildAreas(resArea.getId()));
 		}
 		return res;
 	}
@@ -514,17 +518,19 @@ public class StreetsDataSource {
 		return true;
 	}
 
-	public Collection<Street> findStreets(String name, Set<Area> areas,
+	public Collection<Street> findStreets(String name, Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types) {
 		String queryHeader = "SELECT DISTINCT * FROM streets";
 		String joinWithAreas = ", street_areas ON streets.id = street_areas.street";
 		String where = " WHERE";
 		StringBuilder areaString = new StringBuilder(" street_areas.area IN (");
-		for(Area area : areas){
-			areas.addAll(getChildAreas(area));
+		for(Integer areaId : areas){
+			for(Area area: getChildAreas(areaId)){
+				areas.add(area.getId());
+			}
 		}
-		for(Area area : areas){
-			areaString.append(area.getId()).append(", ");
+		for(Integer area : areas){
+			areaString.append(area).append(", ");
 		}
 		String inString = "";
 		if(areas.size() > 0){
