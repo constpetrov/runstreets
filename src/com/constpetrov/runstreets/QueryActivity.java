@@ -138,15 +138,15 @@ public class QueryActivity extends Activity {
 		return true;
 	}
 	
-	private class LoadDBTask extends AsyncTask<Context, Void, StreetsDataSource> {
+	class LoadDBTask extends AsyncTask<Context, Void, StreetsDataSource> {
 		
 		private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
 		@Override
 		protected void onPreExecute()
 		{
-			this.dialog.setTitle(R.string.db_update);
-			this.dialog.setMessage("Подождите…");
-			this.dialog.show();
+			dialog.setTitle(R.string.db_update);
+			dialog.setMessage("Подождите…");
+			dialog.show();
 		}
 
 		@Override
@@ -158,31 +158,29 @@ public class QueryActivity extends Activity {
 		@Override
 		protected void onPostExecute(final StreetsDataSource success)
 		{
-			if(this.dialog.isShowing()){
-				this.dialog.dismiss();
+			if(dialog.isShowing()){
+				dialog.dismiss();
 			}
 		}
 	}
 	
-	private class ExecQuery extends AsyncTask<SearchParameters, Void, Collection<Street>> {
-		private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
+	class ExecQuery extends AsyncTask<SearchParameters, Void, Collection<Street>> {
+		private ProgressDialog pd;
 		
 		@Override
 		protected Collection<Street> doInBackground(SearchParameters... params) {
-			return dataSource.findStreets(params[0].getName(), params[0].getAreas(), null, null);
+			Collection<Street> res = dataSource.findStreets(params[0].getName(), params[0].getAreas(), null, null); 
+			return res;
 		}
 
 		@Override
-		protected void onPostExecute(Collection<Street> result) {
-			if(this.dialog.isShowing()){
-				this.dialog.dismiss();
-			}
+		protected void onPostExecute(final Collection<Street> result) {
+			pd.dismiss();
 		}
 
 		@Override
 		protected void onPreExecute() {
-			this.dialog.setMessage("Поиск…");
-			this.dialog.show();
+			pd = ProgressDialog.show(QueryActivity.this, "", "Поиск", false);
 		}
 		
 		
