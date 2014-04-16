@@ -13,17 +13,23 @@ import com.constpetrov.runstreets.model.Street;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+import android.os.*;
+import android.app.*;
 
 
 
 public class QueryActivity extends Activity {
+	
+	private final String TAG = "QueryActivity";
 	
 	public static final String QUERY_RESULT = "queryResult";
 
@@ -39,7 +45,13 @@ public class QueryActivity extends Activity {
 		setContentView(R.layout.activity_query);
 		
 		dataSource = StreetsDataSource.get(this);
-		
+		MyTask t = new MyTask();
+		t.execute(this);
+		try{
+			dataSource = t.get();
+		} catch (Exception e) {
+			Log.e(TAG, "Cannot update db", e);
+		}
 		List<Area> groupAreas = dataSource.getAdministrativeStates();
 		
 		groups = new ArrayList<OptionItem<Area>>();
@@ -118,6 +130,33 @@ public class QueryActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.query, menu);
 		return true;
+	}
+	
+	class MyTask extends AsyncTask<Context, Void, StreetsDataSource>
+	{
+private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
+		@Override
+		protected void onPreExecute()
+		{
+			dialog.setTitle("Обновление базы");
+			dialog.show();
+		}
+
+		@Override
+		protected StreetsDataSource doInBackground(Context... context)
+		{
+			return StreetsDataSource.get(context[0]);
+		}
+
+		@Override
+		protected void onPostExecute()
+		{
+			if(dialog.isShowing()){
+				dialog.dismiss();
+			}
+		}
+
+		
 	}
 
 }
