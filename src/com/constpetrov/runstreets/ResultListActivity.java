@@ -70,8 +70,8 @@ public class ResultListActivity extends ExpandableListActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	class LoadInfosTask extends AsyncTask<Street, Integer, List<List<StreetInfo>>>{
-		ProgressDialog dialog = new ProgressDialog(ResultListActivity.this, ProgressDialog.STYLE_HORIZONTAL);
+	private class LoadInfosTask extends AsyncTask<Street, Integer, List<List<StreetInfo>>>{
+		private ProgressDialog dialog = new ProgressDialog(ResultListActivity.this, ProgressDialog.STYLE_HORIZONTAL);
 		
 		
 		@Override

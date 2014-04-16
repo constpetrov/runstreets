@@ -144,8 +144,7 @@ public class QueryActivity extends Activity {
 		@Override
 		protected void onPreExecute()
 		{
-			dialog.setTitle(R.string.db_update);
-			dialog.setMessage("Подождите…");
+			dialog.setTitle("");
 			dialog.show();
 		}
 
