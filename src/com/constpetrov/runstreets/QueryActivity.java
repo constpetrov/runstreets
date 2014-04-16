@@ -134,11 +134,12 @@ public class QueryActivity extends Activity {
 	
 	class MyTask extends AsyncTask<Context, Void, StreetsDataSource>
 	{
-private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
+		private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
 		@Override
 		protected void onPreExecute()
 		{
-			dialog.setTitle("Обновление базы");
+			dialog.setTitle(R.string.db_update);
+			dialog.setMessage(QueryActivity.this.getString(R.string.please_wait));
 			dialog.show();
 		}
 
