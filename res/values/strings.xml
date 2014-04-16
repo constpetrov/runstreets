@@ -7,6 +7,8 @@
     <string name="title_activity_result_list">Результаты поиска</string>
     <string name="button">find!</string>
     <string name="db_update">Обновление базы</string>
+    <string name="show_results">Загрузка результатов</string>
+    <string name="exec_query">Поиск</string>
     <string name="please_wait">Подождите…</string>
 
 </resources>

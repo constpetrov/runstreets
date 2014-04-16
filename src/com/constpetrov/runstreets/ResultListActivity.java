@@ -17,6 +17,9 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 public class ResultListActivity extends ExpandableListActivity {
+	
+	List<Street> streets;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,16 +28,9 @@ public class ResultListActivity extends ExpandableListActivity {
 		// Show the Up button in the action bar.
 		setupActionBar();
 		Intent intent =getIntent();
-		List<Street> streets = intent.getParcelableArrayListExtra(QueryActivity.QUERY_RESULT);
-		List<List<StreetInfo>> infos = new LinkedList<List<StreetInfo>>();
+		streets = intent.getParcelableArrayListExtra(QueryActivity.QUERY_RESULT);
 		LoadInfosTask loadTask = new LoadInfosTask();
 		loadTask.execute(streets.toArray(new Street[streets.size()]));
-		try{
-			infos = loadTask.get();
-		} catch (Exception e) {
-			
-		}
-		setListAdapter(new ExpandableResListAdapter(getLayoutInflater(), streets, infos));
 	}
 
 	/**
@@ -71,19 +67,18 @@ public class ResultListActivity extends ExpandableListActivity {
 	}
 	
 	private class LoadInfosTask extends AsyncTask<Street, Integer, List<List<StreetInfo>>>{
-		private ProgressDialog dialog = new ProgressDialog(ResultListActivity.this, ProgressDialog.STYLE_HORIZONTAL);
+		private ProgressDialog dialog = new ProgressDialog(ResultListActivity.this);
 		
 		
 		@Override
 		protected List<List<StreetInfo>> doInBackground(Street... params) {
-			int totalCount = params.length;
 			int count = 0;
 			List<List<StreetInfo>> infos = new LinkedList<List<StreetInfo>>();
 			for(Street street: params){
 				List<StreetInfo> infoList = new LinkedList<StreetInfo>();
 				infos.add(infoList);
 				infoList.add(StreetsDataSource.get().getStreetInfo(street.getId()));
-				publishProgress((int) ((100.0/(double)totalCount) * (double)++count));
+				publishProgress(++count);
 			}
 			return infos;
 		}
@@ -91,12 +86,17 @@ public class ResultListActivity extends ExpandableListActivity {
 		@Override
 		protected void onPostExecute(List<List<StreetInfo>> result) {
 			dialog.dismiss();
+			setListAdapter(new ExpandableResListAdapter(getLayoutInflater(), streets, result));
 		}
 
 		@Override
 		protected void onPreExecute() {
-			dialog.setMax(100);
-			dialog.setMessage("Загрузка");
+			dialog.setMax(streets.size());
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.setTitle(R.string.show_results);
+			dialog.setMessage(ResultListActivity.this.getString(R.string.please_wait));
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(false);
 			dialog.show();
 		}
 

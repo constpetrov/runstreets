@@ -63,7 +63,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
         Utils.setListViewHeightBasedOnChildren(renameList);
         
         TextView areasView = (TextView)view.findViewById(R.id.areas);
-        StringBuilder areaSB =new StringBuilder("Районы:\n");
+        StringBuilder areaSB =new StringBuilder();
         if(info.getAreas() != null)
         for(int i =0; i < info.getAreas().size(); i++){
         	areaSB.append(info.getAreas().get(i).getName());

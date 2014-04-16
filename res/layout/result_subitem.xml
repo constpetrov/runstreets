@@ -19,10 +19,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/renames"
         android:layout_alignLeft="@id/renames"/> -->
-    <TextView android:id="@+id/areas"
+    <TextView android:id="@+id/areas_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/renames"
-        android:layout_alignLeft="@id/renames"/>
+        android:layout_alignLeft="@id/renames"
+        android:text="Районы:"
+        android:textStyle="bold"/>
+    <TextView android:id="@+id/areas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/areas_title"
+        android:layout_alignLeft="@id/areas_title"/>
 
 </RelativeLayout>
