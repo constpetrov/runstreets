@@ -3,14 +3,12 @@ package com.constpetrov.runstreets;
 import java.util.List;
 
 import com.constpetrov.runstreets.model.Street;
-import com.constpetrov.runstreets.model.StreetHistory;
 import com.constpetrov.runstreets.model.StreetInfo;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
 

@@ -1,7 +1,6 @@
 package com.constpetrov.runstreets;
 
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;

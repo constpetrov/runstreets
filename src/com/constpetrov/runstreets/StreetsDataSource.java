@@ -3,14 +3,10 @@ package com.constpetrov.runstreets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.constpetrov.runstreets.model.Area;
@@ -34,6 +30,7 @@ public class StreetsDataSource {
 	private static final String TABLE_AREAS = "areas";
 	private static final String TABLE_STREETS = "streets";
 	private static final String TAG = "StreetsDataSource";
+	@SuppressWarnings("unused")
 	private static final String[] STREETS_COLUMNS = {"id", 
 											"code", 
 											"name", 
@@ -228,6 +225,7 @@ public class StreetsDataSource {
 		return res;
 	}
 	
+	@SuppressWarnings("unused")
 	private List<Area> getParentAreas(Area area){
 		List<Area> res = new LinkedList<Area>();
 		Cursor c = null;
@@ -375,6 +373,7 @@ public class StreetsDataSource {
 		return null;
 	}
 	
+	@SuppressWarnings("unused")
 	private List<String> getStreetTypes(){
 		List<String> res = new LinkedList<String>();
 		Cursor c = dbHelper.getReadableDatabase().query("street_types", new String[]{"name"},"is_old = 0",null,null,null,null);

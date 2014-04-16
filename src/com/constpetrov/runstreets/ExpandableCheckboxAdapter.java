@@ -3,7 +3,6 @@ package com.constpetrov.runstreets;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,8 @@ public class ExpandableCheckboxAdapter<T> extends BaseExpandableListAdapter {
                         @Override
                         public void onCheckedChanged(CompoundButton button,
                                 boolean isChecked) {
-                            OptionItem item = (OptionItem) childHolder.cb
+                            @SuppressWarnings("rawtypes")
+							OptionItem item = (OptionItem) childHolder.cb
                                     .getTag();
                             item.setSelected(button.isChecked());
                         }
@@ -121,7 +121,8 @@ public class ExpandableCheckboxAdapter<T> extends BaseExpandableListAdapter {
                         @Override
                         public void onCheckedChanged(CompoundButton button,
                                 boolean isChecked) {
-                            OptionItem item = (OptionItem) childHolder.cb
+                            @SuppressWarnings("rawtypes")
+							OptionItem item = (OptionItem) childHolder.cb
                                     .getTag();
                             item.setSelected(button.isChecked());
                         }

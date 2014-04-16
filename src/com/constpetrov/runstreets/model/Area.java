@@ -1,7 +1,6 @@
 package com.constpetrov.runstreets.model;
 
-import java.util.LinkedList;
-import java.util.List;
+import android.annotation.SuppressLint;
 import java.util.StringTokenizer;
 
 public class Area {
@@ -54,8 +53,8 @@ public class Area {
 	}
 	
 	private String getAbbr() {
-		if(getName().startsWith("Зелен")){
-			return "Зеленоград";
+		if(getName().startsWith("Р—РµР»РµРЅ")){
+			return "Р—РµР»РµРЅРѕРіСЂР°Рґ";
 		}
 		StringTokenizer tokenizer = new StringTokenizer(getName(), " -");
 		StringBuilder b = new StringBuilder();
@@ -66,7 +65,7 @@ public class Area {
 	}
 	
 	public String getDistrictName(){
-		return getName().replace("Район ", "").replace(" район", "");
+		return getName().replace("Р Р°Р№РѕРЅ ", "").replace(" СЂР°Р№РѕРЅ", "");
 	}
 	
 }

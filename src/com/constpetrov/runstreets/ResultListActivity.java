@@ -7,9 +7,7 @@ import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetInfo;
 
 import android.os.Bundle;
-import android.app.Activity;
 import android.app.ExpandableListActivity;
-import android.app.ListActivity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
