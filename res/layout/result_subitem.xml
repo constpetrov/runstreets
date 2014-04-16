@@ -3,10 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+   	<TextView android:id="@+id/type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"/>
+    
     <ListView android:id="@+id/renames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_below="@id/type"
+        android:layout_alignLeft="@id/type"
         />
     <!-- <TextView android:id="@+id/houses"
         android:layout_width="match_parent"

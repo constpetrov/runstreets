@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
@@ -533,7 +535,7 @@ public class StreetsDataSource {
 		String fullQuery = queryHeader + joinWithAreas
 							+ where + (areas.size() != 0 ? inString : "") + nameString;
 						
-		Set<Street> result = new HashSet<Street>();
+		Set<Street> result = new TreeSet<Street>();
 		Cursor c = null;
 		try{
 			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);

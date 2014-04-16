@@ -53,6 +53,10 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
         } else {
             view = convertView; 
         }
+        
+        TextView typeView = (TextView)view.findViewById(R.id.type);
+        typeView.setText(info.getStreetTypeName());
+        
         renameList = (ListView)view.findViewById(R.id.renames);
         renameList.setAdapter(listAdapter);
 		
@@ -107,16 +111,15 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 		View view = null;
         if (convertView == null) {
             view = inflater.inflate(R.layout.result_item, null);
-            TextView nameView = (TextView)view.findViewById(R.id.street_name);
-            TextView typeView = (TextView)view.findViewById(R.id.street_type);
             
-            nameView.setText(streets.get(groupPosition).toString());
-            typeView.setText(StreetsDataSource.get().getTypeName(streets.get(groupPosition)));
             
         } else {
             view = convertView;         
         }
         
+        TextView nameView = (TextView)view.findViewById(R.id.street_name);
+        
+        nameView.setText(streets.get(groupPosition).toString());
         
         return view;
 	}

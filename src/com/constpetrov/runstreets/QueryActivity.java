@@ -1,6 +1,7 @@
 package com.constpetrov.runstreets;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,8 +44,7 @@ public class QueryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_query);
 		
-		dataSource = StreetsDataSource.get(this);
-		MyTask t = new MyTask();
+		LoadDBTask t = new LoadDBTask();
 		t.execute(this);
 		try{
 			dataSource = t.get();
@@ -92,7 +92,14 @@ public class QueryActivity extends Activity {
 	protected List<Street> findStreets(Set<Area> areas,
 			List<Rename> renames, Set<Integer> types, String name) {
 		List<Street> result = new ArrayList<Street>();
-		result.addAll(dataSource.findStreets(name, areas, renames, types));
+		SearchParameters params = new SearchParameters(name, areas);
+		ExecQuery query = new ExecQuery();
+		query.execute(params);
+		try{
+			result.addAll(query.get());
+		} catch (Exception e){
+			Log.e(TAG, "Cannot execute query task", e);
+		}
 		return result;
 	}
 
@@ -131,15 +138,15 @@ public class QueryActivity extends Activity {
 		return true;
 	}
 	
-	class MyTask extends AsyncTask<Context, Void, StreetsDataSource>
-	{
+	private class LoadDBTask extends AsyncTask<Context, Void, StreetsDataSource> {
+		
 		private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
 		@Override
 		protected void onPreExecute()
 		{
-			dialog.setTitle(R.string.db_update);
-			dialog.setMessage(QueryActivity.this.getString(R.string.please_wait));
-			dialog.show();
+			this.dialog.setTitle(R.string.db_update);
+			this.dialog.setMessage("Подождите…");
+			this.dialog.show();
 		}
 
 		@Override
@@ -151,12 +158,36 @@ public class QueryActivity extends Activity {
 		@Override
 		protected void onPostExecute(final StreetsDataSource success)
 		{
-			if(dialog.isShowing()){
-				dialog.dismiss();
+			if(this.dialog.isShowing()){
+				this.dialog.dismiss();
+			}
+		}
+	}
+	
+	private class ExecQuery extends AsyncTask<SearchParameters, Void, Collection<Street>> {
+		private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
+		
+		@Override
+		protected Collection<Street> doInBackground(SearchParameters... params) {
+			return dataSource.findStreets(params[0].getName(), params[0].getAreas(), null, null);
+		}
+
+		@Override
+		protected void onPostExecute(Collection<Street> result) {
+			if(this.dialog.isShowing()){
+				this.dialog.dismiss();
 			}
 		}
 
+		@Override
+		protected void onPreExecute() {
+			this.dialog.setMessage("Поиск…");
+			this.dialog.show();
+		}
+		
 		
 	}
 
+	
+	
 }
