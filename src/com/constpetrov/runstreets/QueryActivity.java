@@ -149,7 +149,7 @@ private ProgressDialog dialog = new ProgressDialog(QueryActivity.this);
 		}
 
 		@Override
-		protected void onPostExecute()
+		protected void onPostExecute(final StreetsDataSource success)
 		{
 			if(dialog.isShowing()){
 				dialog.dismiss();
