@@ -21,15 +21,16 @@
         <activity
             android:name="com.constpetrov.runstreets.QueryActivity"
             android:label="@string/title_activity_query" >
+            
+        </activity>
+        <activity
+            android:name="com.constpetrov.runstreets.FragActivity"
+            android:label="@string/title_activity_frag" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.constpetrov.runstreets.FragActivity"
-            android:label="@string/title_activity_frag" >
         </activity>
     </application>
 
