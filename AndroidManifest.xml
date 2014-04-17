@@ -16,12 +16,7 @@
         <activity
             android:name="com.constpetrov.runstreets.ResultListActivity"
             android:label="@string/title_activity_result_list"
-            android:parentActivityName="com.constpetrov.runstreets.QueryActivity" >
-        </activity>
-        <activity
-            android:name="com.constpetrov.runstreets.QueryActivity"
-            android:label="@string/title_activity_query" >
-            
+            android:parentActivityName="com.constpetrov.runstreets.FragActivity" >
         </activity>
         <activity
             android:name="com.constpetrov.runstreets.FragActivity"
