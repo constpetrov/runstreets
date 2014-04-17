@@ -1,4 +1,4 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

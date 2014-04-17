@@ -1,10 +1,10 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.model;
 
 import java.util.Set;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.constpetrov.runstreets.model.Area;
 import java.util.*;
 
 public class SearchParameters implements Parcelable {

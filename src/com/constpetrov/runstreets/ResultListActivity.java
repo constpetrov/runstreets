@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.constpetrov.runstreets.db.StreetsDataSource;
+import com.constpetrov.runstreets.gui.ExpandableResListAdapter;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetInfo;
 

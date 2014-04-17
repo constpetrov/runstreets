@@ -8,8 +8,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import com.constpetrov.runstreets.db.StreetsDataSource;
+import com.constpetrov.runstreets.gui.ExpandableCheckboxAdapter;
+import com.constpetrov.runstreets.gui.OptionItem;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
+import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
 
 import android.os.Bundle;

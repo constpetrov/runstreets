@@ -1,4 +1,4 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.gui;
 
 public class OptionItem<T> {
 

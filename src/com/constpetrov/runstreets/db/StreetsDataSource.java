@@ -1,4 +1,4 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.db;
 
 import java.io.BufferedReader;
 import java.io.IOException;

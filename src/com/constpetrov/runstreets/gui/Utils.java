@@ -1,4 +1,4 @@
-package com.constpetrov.runstreets;
+package com.constpetrov.runstreets.gui;
 
 import android.view.View;
 import android.view.ViewGroup;

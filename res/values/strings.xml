@@ -10,5 +10,7 @@
     <string name="show_results">Загрузка результатов</string>
     <string name="exec_query">Поиск</string>
     <string name="please_wait">Подождите…</string>
+    <string name="title_activity_frag">FragActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
