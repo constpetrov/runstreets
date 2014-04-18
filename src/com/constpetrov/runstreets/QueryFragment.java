@@ -95,7 +95,7 @@ public class QueryFragment extends Fragment implements CreateUIListener{
 	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name) {
 		List<Street> result = new ArrayList<Street>();
-		SearchParameters params = new SearchParameters(name, null, areas, 0, 0);
+		SearchParameters params = new SearchParameters(name, false, areas, 0, 0);
 		ExecQuery query = new ExecQuery(getActivity(), mListener);
 		query.execute(params);
 	}

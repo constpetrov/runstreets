@@ -11,7 +11,7 @@ public class SearchParameters implements Parcelable {
 	
 	private final String name;
 	
-	private final String oldName;
+	private final boolean useOldName;
 	
 	private final Set<Integer> areas;
 	
@@ -34,9 +34,9 @@ public class SearchParameters implements Parcelable {
 		}
 	};
 	
-	public SearchParameters(String name, String oldName, Set<Integer> areas, int type, int renameCount){
+	public SearchParameters(String name, boolean useOldName, Set<Integer> areas, int type, int renameCount){
 		this.name = name;
-		this.oldName = oldName;
+		this.useOldName= useOldName;
 		this.areas = areas;
 		this.type = type;
 		this.renameCount = renameCount;
@@ -44,9 +44,12 @@ public class SearchParameters implements Parcelable {
 	
 	public SearchParameters(Parcel in){
 		name = in.readString();
-		oldName = in.readString();
+		useOldName = in.readInt()==1;
 		areas = new HashSet<Integer>();
-		//TODO: add reading array of Area
+		int[] buffer = in.createIntArray();
+		for(int area : buffer){
+			areas.add(area);
+		}
 		type = in.readInt();
 		renameCount = in.readInt();
 	}
@@ -66,9 +69,18 @@ public class SearchParameters implements Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(Parcel p1, int p2)
+	public void writeToParcel(Parcel p, int p2)
 	{
-		// TODO: Implement this method
+		p.writeString(name);
+		p.writeInt(useOldName ? 1:0);
+		int [] buffer = new int[areas.size()];
+		int counter = 0;
+		for(Integer area : areas){
+			buffer[counter++] = area;
+		}
+		p.writeIntArray(buffer);
+		p.writeInt(type);
+		p.writeInt(renameCount);
 	}
 
 }
