@@ -2,21 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <ExpandableListView
-        android:id="@+id/expandableListView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/button1" >
-
-    </ExpandableListView>
-
-    <ExpandableListView
-        android:id="@+id/expandableListView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/expandableListView1" >
-    </ExpandableListView>
 
     <EditText
         android:id="@+id/editText"
@@ -34,6 +19,21 @@
         android:layout_alignRight="@+id/expandableListView1"
         android:layout_alignTop="@+id/editText"
         android:text="@string/button" />
+    
+    <ExpandableListView
+        android:id="@+id/expandableListView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1" >
+
+    </ExpandableListView>
+
+    <ExpandableListView
+        android:id="@+id/expandableListView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expandableListView1" >
+    </ExpandableListView>
     
 
 </RelativeLayout>
