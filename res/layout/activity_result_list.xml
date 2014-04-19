@@ -7,10 +7,10 @@
     <!-- "Fragment B" -->
 
     <fragment
-        android:id="@+id/query_frag"
+        android:id="@+id/result_frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.constpetrov.runstreets.ResultListFragment"
-        tools:layout="@layout/fragment_query" />
+        tools:layout="@layout/fragment_result" />
 
 </FrameLayout>

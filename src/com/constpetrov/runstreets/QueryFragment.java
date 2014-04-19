@@ -13,6 +13,7 @@ import com.constpetrov.runstreets.gui.ExpandableCheckboxAdapter;
 import com.constpetrov.runstreets.gui.LoadDBTask;
 import com.constpetrov.runstreets.gui.OnQueryListener;
 import com.constpetrov.runstreets.gui.OptionItem;
+import com.constpetrov.runstreets.gui.UpdateGuiListener;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
 import com.constpetrov.runstreets.model.SearchParameters;
@@ -27,12 +28,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
 
-public class QueryFragment extends Fragment implements CreateUIListener{
-	
-	private ArrayList<OptionItem<Area>> groups;
-	
-	private List<List<OptionItem<Area>>> children;
+public class QueryFragment extends Fragment implements UpdateGuiListener{
 	
 	private OnQueryListener mListener;
 
@@ -63,24 +61,50 @@ public class QueryFragment extends Fragment implements CreateUIListener{
 
 
 	@Override
-	public void createUI() {
-		groups = new ArrayList<OptionItem<Area>>();
-		children = new ArrayList<List<OptionItem<Area>>>();
-		List<Area> groupAreas = StreetsDataSource.get().getAdministrativeStates();
+	public void updateGui() {
+		ArrayList<OptionItem<Area>> groups = ((FragActivity)getActivity()).getGroups();
+		List<List<OptionItem<Area>>> children = ((FragActivity)getActivity()).getChildren();
+		
+		if(groups.size() == 0 || children.size() == 0){
+			List<Area> groupAreas = StreetsDataSource.get().getAdministrativeStates();
+		    for(Area area: groupAreas){
+		    	OptionItem<Area> areaItem = new OptionItem<Area>(area, area.toString());
+		    	groups.add(areaItem);
+		    	List<OptionItem<Area>> tmp = new LinkedList<OptionItem<Area>>();
+		    	for(Area district: StreetsDataSource.get().getChildAreas(area)){
+		    		OptionItem<Area> districtItem = new OptionItem<Area>(district, district.getDistrictName());
+		    		tmp.add(districtItem);
+		    	}
+		    	children.add(tmp);
+		    }
+		}
 
-	    for(Area area: groupAreas){
-	    	OptionItem<Area> areaItem = new OptionItem<Area>(area, area.toString());
-	    	groups.add(areaItem);
-	    	List<OptionItem<Area>> tmp = new LinkedList<OptionItem<Area>>();
-	    	for(Area district: StreetsDataSource.get().getChildAreas(area)){
-	    		OptionItem<Area> districtItem = new OptionItem<Area>(district, district.getDistrictName());
-	    		tmp.add(districtItem);
+	    StringBuilder b = new StringBuilder();
+	    int groupNumber = 0;
+	    for(OptionItem<Area> group: groups){
+	    	String childString = "";
+	    	if(group.isSelected()){
+	    		childString = "все районы";
+	    	} else {
+	    		StringBuilder childBuilder = new StringBuilder();
+	    		for(OptionItem<Area> child: children.get(groupNumber)){
+	    			if(child.isSelected()){
+	    				childBuilder.append(child.getName());
+	    				childBuilder.append(", ");
+	    			}
+	    		}
+	    		childString = childBuilder.substring(0, childBuilder.lastIndexOf(","));
 	    	}
-	    	children.add(tmp);
+	    	groupNumber++;
+	    	if(childString.length() == 0){
+	    		continue;
+	    	}
+	    	b.append(group.getName());
+    		b.append(":");
+    		b.append("\n");
+    		b.append(childString);
+    		b.append("\n");
 	    }
-
-	    ExpandableListView elv = (ExpandableListView) getActivity().findViewById(R.id.expandableListView1);
-	    elv.setAdapter(new ExpandableCheckboxAdapter<Area>(getActivity().getLayoutInflater(), groups, children));
 	    
 	    final Button findButton = (Button)getActivity().findViewById(R.id.button1);
 	    findButton.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +112,27 @@ public class QueryFragment extends Fragment implements CreateUIListener{
 			@Override
 			public void onClick(View v) {
 				findStreets(getAreas(), getRenames(), getTypes(), getName());
+			}
+		});
+	    
+	    final TextView areas = (TextView)getActivity().findViewById(R.id.areas);
+	    areas.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AreaDialogFragment dialog = new AreaDialogFragment();
+				dialog.show(getFragmentManager(), "dialog");
+				
+			}
+		});
+	    
+	    final TextView types = (TextView)getActivity().findViewById(R.id.types);
+	    types.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO show dialog
+				
 			}
 		});
 	}
@@ -102,12 +147,12 @@ public class QueryFragment extends Fragment implements CreateUIListener{
 
 	private Set<Integer> getAreas() {
 		Set<Integer> result = new HashSet<Integer>();
-		for(OptionItem<Area> oi: groups){
+		for(OptionItem<Area> oi: ((FragActivity)getActivity()).getGroups()){
 			if(oi.isSelected()){
 				result.add(oi.getItem().getId());
 			}
 		}
-		for(List<OptionItem<Area>> childGroup: children){
+		for(List<OptionItem<Area>> childGroup: ((FragActivity)getActivity()).getChildren()){
 			for(OptionItem<Area> oi: childGroup){
 				if(oi.isSelected()){
 					result.add(oi.getItem().getId());

@@ -15,9 +15,9 @@ public class LoadDBTask extends AsyncTask<Void, Void, Void> {
 	
 	private Context context;
 	
-	private CreateUIListener listener;
+	private UpdateGuiListener listener;
 	
-	public LoadDBTask(Context context, CreateUIListener listener){
+	public LoadDBTask(Context context, UpdateGuiListener listener){
 		this.context = context;
 		dialog = new ProgressDialog(context);
 		this.listener = listener;
@@ -46,7 +46,7 @@ public class LoadDBTask extends AsyncTask<Void, Void, Void> {
 		if(dialog.isShowing()){
 			dialog.dismiss();
 		}
-		listener.createUI();
+		listener.updateGui();
 	}
 
 }

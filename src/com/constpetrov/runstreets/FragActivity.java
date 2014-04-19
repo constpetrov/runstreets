@@ -2,9 +2,13 @@ package com.constpetrov.runstreets;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.constpetrov.runstreets.gui.OnQueryListener;
 import com.constpetrov.runstreets.gui.OnUpdateInfosListListener;
+import com.constpetrov.runstreets.gui.OptionItem;
+import com.constpetrov.runstreets.gui.UpdateGuiListener;
+import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Street;
 
 import android.os.Bundle;
@@ -14,9 +18,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 
-public class FragActivity extends FragmentActivity implements OnQueryListener{
+public class FragActivity extends FragmentActivity implements OnQueryListener, UpdateGuiListener{
 
 	public static final String QUERY_RESULT = "query_result";
+	
+	private ArrayList<OptionItem<Area>> groups = new ArrayList<OptionItem<Area>>();
+	
+	private List<List<OptionItem<Area>>> children = new ArrayList<List<OptionItem<Area>>>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,5 +58,22 @@ public class FragActivity extends FragmentActivity implements OnQueryListener{
 		}
 
 		
+	}
+
+	public ArrayList<OptionItem<Area>> getGroups() {
+		return groups;
+	}
+
+	public List<List<OptionItem<Area>>> getChildren() {
+		return children;
+	}
+	
+	@Override
+	public void updateGui() {
+		try{
+			((UpdateGuiListener)getSupportFragmentManager().findFragmentById(R.id.query_frag)).updateGui();
+		} catch (ClassCastException e){
+			
+		}
 	}
 }
