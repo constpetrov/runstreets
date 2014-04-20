@@ -84,7 +84,7 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	    for(OptionItem<Area> group: groups){
 	    	String childString = "";
 	    	if(group.isSelected()){
-	    		childString = "��� ������";
+	    		childString = "все районы";
 	    	} else {
 	    		StringBuilder childBuilder = new StringBuilder();
 	    		for(OptionItem<Area> child: children.get(groupNumber)){
@@ -105,6 +105,10 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
     		b.append(childString);
     		b.append("\n");
 	    }
+		
+		String areasStr = b.length() ==0 ? "Все районы":b.toString();
+		
+		
 	    
 	    final Button findButton = (Button)getActivity().findViewById(R.id.button1);
 	    findButton.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +129,8 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 				
 			}
 		});
+		
+		areas.setText(areasStr);
 	    
 	    final TextView types = (TextView)getActivity().findViewById(R.id.types);
 	    types.setOnClickListener(new View.OnClickListener() {
