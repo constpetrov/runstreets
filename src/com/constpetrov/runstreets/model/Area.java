@@ -1,6 +1,5 @@
 package com.constpetrov.runstreets.model;
 
-import android.annotation.SuppressLint;
 import java.util.StringTokenizer;
 
 public class Area {

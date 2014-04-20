@@ -10,5 +10,8 @@
     <string name="exec_query">Поиск</string>
     <string name="please_wait">Подождите…</string>
     <string name="title_activity_frag">БГМ streets</string>
+    <string name="dialog_area_title">Районы:</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

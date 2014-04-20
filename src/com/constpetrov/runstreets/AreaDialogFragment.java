@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.constpetrov.runstreets.gui.ExpandableCheckboxAdapter;
 import com.constpetrov.runstreets.gui.OptionItem;
+import com.constpetrov.runstreets.gui.UpdateGuiListener;
 import com.constpetrov.runstreets.model.Area;
 
 import android.app.Dialog;
@@ -43,6 +44,7 @@ public class AreaDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				writeGroups(groups, ((FragActivity)getActivity()).getGroups());
 				writeChildren(children, ((FragActivity)getActivity()).getChildren());
+				((UpdateGuiListener)getActivity()).updateGui();
 				dismiss();
 			}
 			
@@ -57,9 +59,20 @@ public class AreaDialogFragment extends DialogFragment {
 			}
 			
 		});
-
+		
 		return res;
 	}
+	
+	
+
+	@Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		Dialog d =super.onCreateDialog(savedInstanceState); 
+		d.setTitle(R.string.dialog_area_title);
+		return d;
+	}
+
+
 
 	private <T> void writeGroups(List<OptionItem<T>> source, List<OptionItem<T>> destination){
 		destination.clear();

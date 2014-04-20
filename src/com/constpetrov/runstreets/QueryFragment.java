@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.constpetrov.runstreets.db.StreetsDataSource;
-import com.constpetrov.runstreets.gui.CreateUIListener;
 import com.constpetrov.runstreets.gui.ExecQuery;
-import com.constpetrov.runstreets.gui.ExpandableCheckboxAdapter;
 import com.constpetrov.runstreets.gui.LoadDBTask;
 import com.constpetrov.runstreets.gui.OnQueryListener;
 import com.constpetrov.runstreets.gui.OptionItem;
@@ -17,7 +15,6 @@ import com.constpetrov.runstreets.gui.UpdateGuiListener;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
 import com.constpetrov.runstreets.model.SearchParameters;
-import com.constpetrov.runstreets.model.Street;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,12 +24,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 public class QueryFragment extends Fragment implements UpdateGuiListener{
 	
 	private OnQueryListener mListener;
+	private Button findButton;
+	private TextView areas;
+	private TextView types;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +92,9 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	    				childBuilder.append(", ");
 	    			}
 	    		}
-	    		childString = childBuilder.substring(0, childBuilder.lastIndexOf(","));
+	    		if(childBuilder.lastIndexOf(",") != -1){
+	    			childString = childBuilder.substring(0, childBuilder.lastIndexOf(","));
+	    		}
 	    	}
 	    	groupNumber++;
 	    	if(childString.length() == 0){
@@ -109,43 +110,45 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 		String areasStr = b.length() ==0 ? "Все районы":b.toString();
 		
 		
-	    
-	    final Button findButton = (Button)getActivity().findViewById(R.id.button1);
-	    findButton.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				findStreets(getAreas(), getRenames(), getTypes(), getName());
-			}
-		});
-	    
-	    final TextView areas = (TextView)getActivity().findViewById(R.id.areas);
-	    areas.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				AreaDialogFragment dialog = new AreaDialogFragment();
-				dialog.show(getFragmentManager(), "dialog");
+	    if(findButton == null){
+		    findButton = (Button)getActivity().findViewById(R.id.button1);
+		    findButton.setOnClickListener(new View.OnClickListener() {
 				
-			}
-		});
-		
+				@Override
+				public void onClick(View v) {
+					findStreets(getAreas(), getRenames(), getTypes(), getName());
+				}
+			});
+	    }
+	    if(areas == null){
+		    areas = (TextView)getActivity().findViewById(R.id.areas);
+		    areas.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					AreaDialogFragment dialog = new AreaDialogFragment();
+					dialog.show(getFragmentManager(), "dialog");
+					
+				}
+			});
+	    }
 		areas.setText(areasStr);
 	    
-	    final TextView types = (TextView)getActivity().findViewById(R.id.types);
-	    types.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO show dialog
+		if(types == null){
+		    types = (TextView)getActivity().findViewById(R.id.types);
+		    types.setOnClickListener(new View.OnClickListener() {
 				
-			}
-		});
+				@Override
+				public void onClick(View v) {
+					// TODO show dialog
+					
+				}
+			});
+		}
 	}
 	
 	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name) {
-		List<Street> result = new ArrayList<Street>();
 		SearchParameters params = new SearchParameters(name, false, areas, 0, 0);
 		ExecQuery query = new ExecQuery(getActivity(), mListener);
 		query.execute(params);

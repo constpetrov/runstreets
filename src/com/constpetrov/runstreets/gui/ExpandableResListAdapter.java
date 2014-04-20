@@ -3,8 +3,6 @@ package com.constpetrov.runstreets.gui;
 import java.util.List;
 
 import com.constpetrov.runstreets.R;
-import com.constpetrov.runstreets.R.id;
-import com.constpetrov.runstreets.R.layout;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetInfo;
 

@@ -3,7 +3,7 @@ package com.constpetrov.runstreets.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Street implements Parcelable, Comparable{
+public class Street implements Parcelable, Comparable<Street>{
 	private int id;
 	private int code;
 	private String name;
@@ -132,8 +132,7 @@ public class Street implements Parcelable, Comparable{
 		
 	}
 	@Override
-	public int compareTo(Object arg0) {
-		Street another = (Street)arg0;
+	public int compareTo(Street another) {
 		if(this.getSort() != null && another.getSort() != null){
 			if(this.getSort().compareTo(another.getSort()) == 0){
 				if(this.getSort_second() != null && another.getSort_second() != null){
