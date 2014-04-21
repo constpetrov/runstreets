@@ -3,11 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
     
+	<Button
+        android:id="@+id/dialog_ok"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/list"
+        android:layout_alignParentBottom="true"
+        android:text="@string/ok" />
     <ListView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_above="@id/dialog_ok">
+	</ListView>
+    <Button
+        android:id="@+id/dialog_cancel"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/list"
+        android:layout_alignParentBottom="true"
+        android:text="@string/cancel" />
 
-    </ListView>
+	
 
 </RelativeLayout>
