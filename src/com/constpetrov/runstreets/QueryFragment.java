@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.*;
 
 public class QueryFragment extends Fragment implements UpdateGuiListener{
 	
@@ -116,7 +117,7 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 				
 				@Override
 				public void onClick(View v) {
-					findStreets(getAreas(), getRenames(), getTypes(), getName());
+					findStreets(getAreas(), getRenames(), getTypes(), getName(), isUseOldNames());
 				}
 			});
 	    }
@@ -148,8 +149,8 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	}
 	
 	protected void findStreets(Set<Integer> areas,
-			List<Rename> renames, Set<Integer> types, String name) {
-		SearchParameters params = new SearchParameters(name, false, areas, 0, 0);
+			List<Rename> renames, Set<Integer> types, String name, boolean useOldNames) {
+		SearchParameters params = new SearchParameters(name, useOldNames, areas, 0, 0);
 		ExecQuery query = new ExecQuery(getActivity(), mListener);
 		query.execute(params);
 	}
@@ -181,6 +182,14 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 
 	private String getName(){
 		return ((EditText)getActivity().findViewById(R.id.editText)).getText().toString();
+	}
+	
+	private boolean isUseOldNames(){
+		CheckBox box = (CheckBox)getActivity().findViewById(R.id.fragment_queryUseOldNames);
+		if(box == null){
+			return false;
+		}
+		return box.isSelected();
 	}
 	
 	

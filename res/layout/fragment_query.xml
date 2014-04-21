@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/editText"
-        android:layout_below="@id/editText"/>
+        android:layout_below="@+id/fragment_queryUseOldNames"/>
     
     <TextView android:id="@+id/types"
         android:layout_width="match_parent"
@@ -32,13 +32,12 @@
         android:layout_alignLeft="@id/areas"
         android:layout_below="@id/areas"/>
     
-    <ExpandableListView
-        android:id="@+id/expandableListView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/areas" >
-
-    </ExpandableListView>
+	<CheckBox android:id="@+id/fragment_queryUseOldNames"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/editText"
+		android:text="Включая старые названия"
+		/>
 
     <ExpandableListView
         android:id="@+id/expandableListView2"
