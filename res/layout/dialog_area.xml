@@ -6,7 +6,7 @@
         android:id="@+id/dialog_ok"
         android:layout_width="96dp"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@id/list"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="@string/ok" />
 	<ExpandableListView
@@ -21,7 +21,7 @@
         android:id="@+id/dialog_cancel"
         android:layout_width="96dp"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/list"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:text="@string/cancel" />
 
