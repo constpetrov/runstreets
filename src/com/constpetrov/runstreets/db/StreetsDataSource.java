@@ -454,7 +454,7 @@ public class StreetsDataSource {
 			r = new BufferedReader(new InputStreamReader(assets.open("strets_info.sql")));
 			String line = r.readLine();
 			while(line != null){
-				if(!"".equals(line)){
+				if(!"".equals(line) && !" ".equals(line)){
 					try{
 						dbHelper.getWritableDatabase().execSQL(line);
 					} catch (SQLException e){
