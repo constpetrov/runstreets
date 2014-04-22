@@ -3,12 +3,48 @@ package com.constpetrov.runstreets.model;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class StreetHistory {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class StreetHistory  implements Parcelable{
+	public static Parcelable.Creator<StreetHistory> CREATOR = new Parcelable.Creator<StreetHistory>() {
+
+		@Override
+		public StreetHistory createFromParcel(Parcel source) {
+			return new StreetHistory(source);
+		}
+
+		@Override
+		public StreetHistory[] newArray(int size) {
+			return new StreetHistory[size];
+		}
+	};
+
 	private int id;
 	private int streetId;
 	private String name;
 	private int type;
 	private String doc;
+
+	public StreetHistory(){};
+	
+	public StreetHistory(Parcel in){
+		id = in.readInt();
+		streetId = in.readInt();
+		name = in.readString();
+		type = in.readInt();
+		doc = in.readString();
+	}
+	
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeInt(streetId);
+		dest.writeString(name);
+		dest.writeInt(type);
+		dest.writeString(doc);
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -47,6 +83,10 @@ public class StreetHistory {
 			return m.group(1);
 		}
 		return "";
+	}
+	@Override
+	public int describeContents() {
+		return 0;
 	}
 	
 
