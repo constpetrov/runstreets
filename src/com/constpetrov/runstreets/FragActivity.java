@@ -8,6 +8,7 @@ import com.constpetrov.runstreets.QueryFragment.TaskCallbacks;
 import com.constpetrov.runstreets.gui.OptionItem;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Street;
+import com.constpetrov.runstreets.model.StreetInfo;
 
 import android.os.Bundle;
 import android.app.ProgressDialog;
@@ -16,7 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 
-public class FragActivity extends FragmentActivity implements TaskCallbacks{
+public class FragActivity extends FragmentActivity implements TaskCallbacks, ResultListFragment.TaskCallbacks{
 
 	public static final String QUERY_RESULT = "query_result";
 	
@@ -26,12 +27,39 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks{
 
 	ProgressDialog dialog;
 	
+	private ArrayList<Street> streets;
+	private ArrayList<StreetInfo> result;
+	
+	public final static String KEY_STREETS = "streets";
+	public final static String KEY_RESULT = "result";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_frag);
 		
+		if(savedInstanceState != null){
+			streets = savedInstanceState.getParcelableArrayList(KEY_STREETS);
+			result = savedInstanceState.getParcelableArrayList(KEY_RESULT);
+			if(result != null){
+				Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.result_frag);
+				if(fragment != null){
+						((ResultListFragment)fragment).showInfos(result);
+				}
+			}
+		}
 	}
+	
+	
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putParcelableArrayList(KEY_STREETS, streets);
+		outState.putParcelableArrayList(KEY_RESULT, result);
+	}
+
+
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,8 +85,11 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks{
 	}
 
 	@Override
-	public void onPreExecute(int titleId, int messageId) {
+	public void onPreExecute(int titleId, int messageId, boolean withProgress) {
 		dialog = new ProgressDialog(this);
+		if(withProgress){
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		}
 		dialog.setTitle(titleId);
 		dialog.setMessage(getString(messageId));
 		dialog.setCanceledOnTouchOutside(false);
@@ -69,8 +100,7 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks{
 
 	@Override
 	public void onProgressUpdate(int percent) {
-		// TODO Auto-generated method stub
-		
+		dialog.setProgress(percent);
 	}
 
 	@Override
@@ -92,8 +122,8 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks{
 		if(dialog.isShowing()){
 			dialog.dismiss();
 		}
-		ArrayList<Street> streets = new ArrayList<Street>();
-		streets.addAll(result);
+		this.streets = new ArrayList<Street>();
+		this.streets.addAll(result);
 		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.result_frag);
 		if(fragment != null){
 				((ResultListFragment)fragment).updateList(streets);
@@ -102,5 +132,16 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks{
 			intent.putParcelableArrayListExtra(QUERY_RESULT, streets);
 			startActivity(intent);
 		}
+	}
+
+
+	@Override
+	public void onPostExecute(List<StreetInfo> result) {
+		this.result = new ArrayList<StreetInfo>();
+		this.result.addAll(result);
+		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.result_frag);
+		if(fragment != null){
+				((ResultListFragment)fragment).showInfos(result);
+		}		
 	}
 }

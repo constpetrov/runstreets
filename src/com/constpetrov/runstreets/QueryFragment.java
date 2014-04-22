@@ -32,7 +32,7 @@ public class QueryFragment extends Fragment{
 	private TextView types;
 	
 	public static interface TaskCallbacks {
-	    void onPreExecute(int titleId, int messageId);
+	    void onPreExecute(int titleId, int messageId, boolean withProgress);
 	    void onProgressUpdate(int percent);
 	    void onCancelled();
 	    void onPostExecute();
@@ -216,7 +216,7 @@ public class QueryFragment extends Fragment{
 		protected void onPreExecute()
 		{
 			if(mCallbacks != null){
-				mCallbacks.onPreExecute(R.string.db_update, R.string.please_wait);
+				mCallbacks.onPreExecute(R.string.db_update, R.string.please_wait, false);
 			}
 		}
 
@@ -253,7 +253,7 @@ public class QueryFragment extends Fragment{
 		@Override
 		protected void onPreExecute() {
 			if(mCallbacks != null){
-				mCallbacks.onPreExecute(R.string.exec_query, R.string.please_wait);
+				mCallbacks.onPreExecute(R.string.exec_query, R.string.please_wait, false);
 			}
 		}
 	}

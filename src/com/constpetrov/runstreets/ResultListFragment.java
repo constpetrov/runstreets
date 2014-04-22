@@ -22,10 +22,10 @@ public class ResultListFragment extends Fragment {
 	List<Street> streets;
 	
 	public static interface TaskCallbacks {
-	    void onPreExecute();
+	    void onPreExecute(int titleId, int messageId, boolean withProgress);
 	    void onProgressUpdate(int percent);
 	    void onCancelled();
-	    void onPostExecute(List<List<StreetInfo>> result);
+	    void onPostExecute(List<StreetInfo> result);
 	}
 	
 	TaskCallbacks mCallbacks;
@@ -54,7 +54,7 @@ public class ResultListFragment extends Fragment {
 		return inflater.inflate(R.layout.fragment_result, container, false);
 	}
 
-	public void showInfos(List<List<StreetInfo>> infos) {
+	public void showInfos(List<StreetInfo> infos) {
 		((ExpandableListView)getActivity().findViewById(R.id.list))
 			.setAdapter(new ExpandableResListAdapter(getActivity().getLayoutInflater(), streets, infos));
 	}
@@ -66,23 +66,21 @@ public class ResultListFragment extends Fragment {
 	}
 	
 	class LoadInfosTask extends
-		AsyncTask<Street, Integer, List<List<StreetInfo>>> {
+		AsyncTask<Street, Integer, List<StreetInfo>> {
 	
 		@Override
-		protected List<List<StreetInfo>> doInBackground(Street... params) {
+		protected List<StreetInfo> doInBackground(Street... params) {
 			int count = 0;
-			List<List<StreetInfo>> infos = new LinkedList<List<StreetInfo>>();
+			List<StreetInfo> infos = new LinkedList<StreetInfo>();
 			for(Street street: params){
-				List<StreetInfo> infoList = new LinkedList<StreetInfo>();
-				infos.add(infoList);
-				infoList.add(StreetsDataSource.get().getStreetInfo(street.getId()));
+				infos.add(StreetsDataSource.get().getStreetInfo(street.getId()));
 				publishProgress((int)((double)++count * 100.0 / (double)params.length));
 			}
 			return infos;
 		}
 		
 		@Override
-		protected void onPostExecute(List<List<StreetInfo>> result) {
+		protected void onPostExecute(List<StreetInfo> result) {
 			if (mCallbacks != null) {
 		        mCallbacks.onPostExecute(result);
 		    }
@@ -91,7 +89,7 @@ public class ResultListFragment extends Fragment {
 		@Override
 		protected void onPreExecute() {
 			if (mCallbacks != null) {
-		        mCallbacks.onPreExecute();
+		        mCallbacks.onPreExecute(R.string.show_results, R.string.please_wait, true);
 			}
 		}
 		

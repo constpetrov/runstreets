@@ -16,10 +16,10 @@ import android.widget.TextView;
 public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 
 	private final List<Street> streets;
-	private final List<List<StreetInfo>> infos;
+	private final List<StreetInfo> infos;
 	private final LayoutInflater inflater;
 	
-	public ExpandableResListAdapter(LayoutInflater inflater, List<Street> streets, List<List<StreetInfo>> infos){
+	public ExpandableResListAdapter(LayoutInflater inflater, List<Street> streets, List<StreetInfo> infos){
 		this.streets = streets;
 		this.infos = infos;
 		this.inflater = inflater;
@@ -30,10 +30,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 		if(infos == null || infos.size() < arg0){
 			return null;
 		}
-		if(infos.get(arg0) == null || infos.get(arg0).size() < arg1){
-			return null;
-		}
-		return infos.get(arg0).get(arg1);
+		return infos.get(arg0);
 	}
 
 	@Override
@@ -46,7 +43,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
             final int childPosition, boolean isLastChild, View convertView,
             ViewGroup parent) {
 		View view = null;
-		StreetInfo info = infos.get(groupPosition).get(childPosition);
+		StreetInfo info = infos.get(groupPosition);
 		HistoryAdapter listAdapter = new HistoryAdapter(info.getHistory(), inflater);
 		ListView renameList = null;
         if (convertView == null) {
@@ -80,7 +77,7 @@ public class ExpandableResListAdapter extends BaseExpandableListAdapter {
 	public int getChildrenCount(int arg0) {
 		if (infos != null && infos.size() > arg0
                 && infos.get(arg0) != null)
-            return infos.get(arg0).size();
+            return 1;
 
         return 0;
 	}

@@ -1,5 +1,6 @@
 package com.constpetrov.runstreets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.constpetrov.runstreets.model.Street;
@@ -14,23 +15,31 @@ import android.view.Menu;
 
 public class ResultListActivity extends FragmentActivity implements ResultListFragment.TaskCallbacks{
 	ProgressDialog dialog;
-	private List<Street> streets;
-	private List<List<StreetInfo>> result;
+	private ArrayList<Street> streets;
+	private ArrayList<StreetInfo> result;
+	
+	public final static String KEY_STREETS = "streets";
+	public final static String KEY_RESULT = "result";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_result_list);
+		if(savedInstanceState != null){
+			streets = savedInstanceState.getParcelableArrayList(KEY_STREETS);
+			result = savedInstanceState.getParcelableArrayList(KEY_RESULT);
+		}
+		
 		Intent intent = getIntent();
 		if(intent != null){
 			List<Street> streetsFromIntent = intent.getParcelableArrayListExtra(FragActivity.QUERY_RESULT);
 			ResultListFragment fragment = (ResultListFragment)getSupportFragmentManager().findFragmentById(R.id.result_frag);
-			if(streetsFromIntent != null && streetsFromIntent.size() != 0){
-				result = null;
-				fragment.updateList(streetsFromIntent);
+			if(streets != null && result != null && streetsFromIntent.equals(streets)){
+				fragment.showInfos(result);
 			} else {
-				if(result != null){
-					fragment.showInfos(result);
-				}
+				result = null;
+				streets = new ArrayList<Street>();
+				streets.addAll(streetsFromIntent);
+				fragment.updateList(streetsFromIntent);
 			}
 		}
 	}
@@ -41,13 +50,21 @@ public class ResultListActivity extends FragmentActivity implements ResultListFr
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		outState.putParcelableArrayList(KEY_STREETS, streets);
+		outState.putParcelableArrayList(KEY_RESULT, result);
+	}
 
 	@Override
-	public void onPreExecute() {
+	public void onPreExecute(int titleId, int messageId, boolean withProgress) {
 		dialog = new ProgressDialog(this);
 		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		dialog.setTitle(R.string.show_results);
-		dialog.setMessage(getString(R.string.please_wait));
+		dialog.setTitle(titleId);
+		dialog.setMessage(getString(messageId));
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setCancelable(false);
 		dialog.show();
@@ -66,10 +83,11 @@ public class ResultListActivity extends FragmentActivity implements ResultListFr
 	}
 
 	@Override
-	public void onPostExecute(List<List<StreetInfo>> result) {
+	public void onPostExecute(List<StreetInfo> result) {
 		dialog.dismiss();
 		ResultListFragment fragment = (ResultListFragment)getSupportFragmentManager().findFragmentById(R.id.result_frag);
-		this.result= result; 
+		this.result = new ArrayList<StreetInfo>();
+		this.result.addAll(result); 
 		fragment.showInfos(result);
 	}
 
