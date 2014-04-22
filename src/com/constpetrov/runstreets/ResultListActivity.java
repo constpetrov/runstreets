@@ -73,7 +73,9 @@ public class ResultListActivity extends FragmentActivity implements ResultListFr
 
 	@Override
 	public void onProgressUpdate(int percent) {
-		dialog.setProgress(percent);
+		if(dialog != null){
+			dialog.setProgress(percent);
+		}
 	}
 
 	@Override
@@ -84,7 +86,9 @@ public class ResultListActivity extends FragmentActivity implements ResultListFr
 
 	@Override
 	public void onPostExecute(List<StreetInfo> result) {
-		dialog.dismiss();
+		if(dialog != null){
+			dialog.dismiss();
+		}
 		ResultListFragment fragment = (ResultListFragment)getSupportFragmentManager().findFragmentById(R.id.result_frag);
 		this.result = new ArrayList<StreetInfo>();
 		this.result.addAll(result); 

@@ -100,7 +100,9 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 
 	@Override
 	public void onProgressUpdate(int percent) {
-		dialog.setProgress(percent);
+		if(dialog != null){
+			dialog.setProgress(percent);
+		}
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 
 	@Override
 	public void onPostExecute() {
-		if(dialog.isShowing()){
+		if(dialog != null && dialog.isShowing()){
 			dialog.dismiss();
 		}
 		updateGui();
@@ -119,7 +121,7 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	
 	@Override
 	public void onPostExecute(Collection<Street> result) {
-		if(dialog.isShowing()){
+		if(dialog != null && dialog.isShowing()){
 			dialog.dismiss();
 		}
 		this.streets = new ArrayList<Street>();
