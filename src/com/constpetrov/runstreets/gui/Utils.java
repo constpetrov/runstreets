@@ -25,4 +25,19 @@ public class Utils {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
+	
+	public static String replace(final String str, final Object... data) {
+        if ((str == null) || (data == null) || (data.length == 0)) {
+            return str;
+        }
+        String result = str;
+        for (int i = 0; i < data.length; i++) {
+            String value = data[i].toString();
+
+            // object can be not null but toString can be null (e.g. entityReference.getCaption())
+            result = result.replace('{' + String.valueOf(i) + '}', value != null ? value : "?"); //$NON-NLS-1$
+        }
+        return result;
+    }
+
 }

@@ -7,7 +7,7 @@
         android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/expandableListView1"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/button1"
         android:ems="10" android:inputType="text"/>
@@ -16,7 +16,7 @@
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/expandableListView1"
+        android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/editText"
         android:text="@string/button" />
     
@@ -43,7 +43,7 @@
         android:id="@+id/expandableListView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/expandableListView1" >
+        android:layout_below="@id/areas" >
     </ExpandableListView>
     
 

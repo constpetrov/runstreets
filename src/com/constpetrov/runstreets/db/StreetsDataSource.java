@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.constpetrov.runstreets.gui.Utils;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
 import com.constpetrov.runstreets.model.AreaInfo;
@@ -559,38 +561,40 @@ public class StreetsDataSource {
 				+ "OR streets.name_lower LIKE \"%{0}%\" "
 				+ "OR street_history.name_lower LIKE \"{0}%\" "
 				+ "OR street_history.name_lower LIKE \"%{0}%\"";
-		String selectByArea = "SELECT DISTINCT * FROM {0}, street_areas ON streets.id = street_areas.street WHERE street_areas.area IN ({1})";
-		String selectByType = "SELECT * FROM {0} WHERE streets.type IN ({1})";
+		String selectByArea = "SELECT DISTINCT * FROM ({0}) a, street_areas ON a.id = street_areas.street WHERE street_areas.area IN ({1})";
+		String selectByType = "SELECT * FROM ({0}) a WHERE a.type IN ({1})";
 		String fullQuery="";
 		
 		if(params.isUseOldName()){
-			fullQuery = String.format(selectByOldName, params.getName());
+			fullQuery = Utils.replace(selectByOldName, params.getName());
 		} else {
-			fullQuery = String.format(selectByName, params.getName());
+			fullQuery = Utils.replace(selectByName, params.getName());
 		}
 		
 		if (params.getAreas().size()!=0){
 			StringBuilder areaString = new StringBuilder();
+			Set<Integer> areas = new HashSet<Integer>();
 			for(Integer areaId : params.getAreas()){
+				areas.add(areaId);
 				for(Area area: getChildAreas(areaId)){
-					params.getAreas().add(area.getId());
+					areas.add(area.getId());
 				}
 			}
-			for(Integer area : params.getAreas()){
+			for(Integer area : areas){
 				areaString.append(area).append(", ");
 			}
 			String inString = areaString.substring(0, areaString.lastIndexOf(","));
-			fullQuery = String.format(selectByArea, fullQuery, inString);
+			fullQuery = Utils.replace(selectByArea, fullQuery, inString);
 		}
 		
 		if (params.getTypes().size()!= 0){
 			StringBuilder typeString = new StringBuilder();
-			for(Integer area : params.getTypes()){
-				typeString.append(area).append(", ");
+			for(Integer type : params.getTypes()){
+				typeString.append(type).append(", ");
 			}
 			String inString = typeString.substring(0, typeString.lastIndexOf(","));
 			
-			fullQuery = String.format(selectByType, fullQuery, inString);
+			fullQuery = Utils.replace(selectByType, fullQuery, inString);
 		}
 		
 		Set<Street> result = new TreeSet<Street>();

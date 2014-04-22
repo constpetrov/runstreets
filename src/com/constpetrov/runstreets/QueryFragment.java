@@ -188,7 +188,7 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 		if(box == null){
 			return false;
 		}
-		return box.isSelected();
+		return box.isChecked();
 	}
 	
 	
