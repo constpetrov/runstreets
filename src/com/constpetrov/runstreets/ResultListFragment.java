@@ -100,6 +100,4 @@ public class ResultListFragment extends Fragment {
 		    }
 		}
 	}
-
-
 }
