@@ -1,6 +1,8 @@
 package com.constpetrov.runstreets;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +24,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.*;
 
 public class QueryFragment extends Fragment implements UpdateGuiListener{
@@ -150,7 +149,7 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	
 	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name, boolean useOldNames) {
-		SearchParameters params = new SearchParameters(name, useOldNames, areas, 0, 0);
+		SearchParameters params = new SearchParameters(name, useOldNames, areas, Collections.<Integer> emptySet(), 0);
 		ExecQuery query = new ExecQuery(getActivity(), mListener);
 		query.execute(params);
 	}

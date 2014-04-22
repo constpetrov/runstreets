@@ -13,6 +13,7 @@ import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
 import com.constpetrov.runstreets.model.AreaInfo;
 import com.constpetrov.runstreets.model.Rename;
+import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
 import com.constpetrov.runstreets.model.StreetInfo;
@@ -29,6 +30,7 @@ public class StreetsDataSource {
 	
 	private static final String TABLE_AREAS = "areas";
 	private static final String TABLE_STREETS = "streets";
+	private static final String TABLE_STREET_HISTORY = "street_history";
 	private static final String TAG = "StreetsDataSource";
 	@SuppressWarnings("unused")
 	private static final String[] STREETS_COLUMNS = {"id", 
@@ -43,6 +45,8 @@ public class StreetsDataSource {
 	private static final String[] STREETS_SEARCH_COLUMNS = {"name_lower", 
 											"sort_lower", 
 											"sort_second_lower"};
+	
+	private static final String[] STREET_HISTORY_SEARCH_COLUMNS = {"name_lower"};
 	
 	private StreetsDBHelper dbHelper;
 	private AssetManager assets;
@@ -470,6 +474,7 @@ public class StreetsDataSource {
 			}
 		}
 		addSearchColumnsToStreets();
+		addSearchColumnsToStreetHistory();
 	}
 	
 	@SuppressLint("DefaultLocale")
@@ -506,6 +511,35 @@ public class StreetsDataSource {
 		}
 	}
 	
+	@SuppressLint("DefaultLocale")
+	private void addSearchColumnsToStreetHistory(){
+		boolean success = true;
+		for(String column: STREET_HISTORY_SEARCH_COLUMNS){
+			success = success && addColumn(TABLE_STREET_HISTORY, column, "TEXT");
+		}
+		if(!success){
+			return;
+		}
+		Cursor c = null;
+		try{
+			c = dbHelper.getReadableDatabase().query(TABLE_STREET_HISTORY, null, null, null, null, null, null);
+			c.moveToFirst();
+			while(!c.isAfterLast()){
+				ContentValues update = new ContentValues();
+				update.put(STREET_HISTORY_SEARCH_COLUMNS[0], c.getString(2).toLowerCase());
+				dbHelper.getWritableDatabase().update(TABLE_STREET_HISTORY, update, "id = ?", new String[] {String.valueOf(c.getInt(0))});
+				c.moveToNext();
+			}
+		} catch (SQLException ex){
+			Log.e(TAG, "Cannot execute query");
+		} finally {
+			if (c!= null){
+				c.close();
+			}
+		}
+	}
+
+	
 	private boolean addColumn(String table, String column, String type){
 		try{
 			dbHelper.getWritableDatabase().execSQL(String.format("ALTER TABLE %s ADD COLUMN '%s' %s", table, column, type));
@@ -516,29 +550,49 @@ public class StreetsDataSource {
 		return true;
 	}
 
-	public Collection<Street> findStreets(String name, Set<Integer> areas,
-			List<Rename> renames, Set<Integer> types) {
-		String queryHeader = "SELECT DISTINCT * FROM streets";
-		String joinWithAreas = ", street_areas ON streets.id = street_areas.street";
-		String where = " WHERE";
-		StringBuilder areaString = new StringBuilder(" street_areas.area IN (");
-		for(Integer areaId : areas){
-			for(Area area: getChildAreas(areaId)){
-				areas.add(area.getId());
+	public Collection<Street> findStreets(SearchParameters params){
+		String selectByName = "SELECT * FROM streets "
+				+ "WHERE streets.name_lower LIKE \"{0}%\" "
+				+ "OR streets.name_lower LIKE \"%{0}%\"";
+		String selectByOldName = "SELECT * FROM streets, street_history ON streets.id = street_history.id_street "
+				+ "WHERE streets.name_lower LIKE \"{0}%\" "
+				+ "OR streets.name_lower LIKE \"%{0}%\" "
+				+ "OR street_history.name_lower LIKE \"{0}%\" "
+				+ "OR street_history.name_lower LIKE \"%{0}%\"";
+		String selectByArea = "SELECT DISTINCT * FROM {0}, street_areas ON streets.id = street_areas.street WHERE street_areas.area IN ({1})";
+		String selectByType = "SELECT * FROM {0} WHERE streets.type IN ({1})";
+		String fullQuery="";
+		
+		if(params.isUseOldName()){
+			fullQuery = String.format(selectByOldName, params.getName());
+		} else {
+			fullQuery = String.format(selectByName, params.getName());
+		}
+		
+		if (params.getAreas().size()!=0){
+			StringBuilder areaString = new StringBuilder();
+			for(Integer areaId : params.getAreas()){
+				for(Area area: getChildAreas(areaId)){
+					params.getAreas().add(area.getId());
+				}
 			}
+			for(Integer area : params.getAreas()){
+				areaString.append(area).append(", ");
+			}
+			String inString = areaString.substring(0, areaString.lastIndexOf(","));
+			fullQuery = String.format(selectByArea, fullQuery, inString);
 		}
-		for(Integer area : areas){
-			areaString.append(area).append(", ");
+		
+		if (params.getTypes().size()!= 0){
+			StringBuilder typeString = new StringBuilder();
+			for(Integer area : params.getTypes()){
+				typeString.append(area).append(", ");
+			}
+			String inString = typeString.substring(0, typeString.lastIndexOf(","));
+			
+			fullQuery = String.format(selectByType, fullQuery, inString);
 		}
-		String inString = "";
-		if(areas.size() > 0){
-			inString = areaString.substring(0, areaString.lastIndexOf(","));
-			inString = inString + ") AND";
-		}
-		String nameString = " (streets.name_lower LIKE \"" + name + "%\" OR streets.name_lower LIKE \"%" + name+ "%\")";
-		String fullQuery = queryHeader + joinWithAreas
-							+ where + (areas.size() != 0 ? inString : "") + nameString;
-						
+		
 		Set<Street> result = new TreeSet<Street>();
 		Cursor c = null;
 		try{

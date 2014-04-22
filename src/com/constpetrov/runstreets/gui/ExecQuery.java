@@ -29,7 +29,7 @@ public class ExecQuery extends
 	
 	@Override
 	protected Collection<Street> doInBackground(SearchParameters... params) {
-		Collection<Street> res = StreetsDataSource.get().findStreets(params[0].getName(), params[0].getAreas(), null, null); 
+		Collection<Street> res = StreetsDataSource.get().findStreets(params[0]); 
 		return res;
 	}
 

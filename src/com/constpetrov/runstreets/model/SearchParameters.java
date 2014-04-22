@@ -15,7 +15,7 @@ public class SearchParameters implements Parcelable {
 	
 	private final Set<Integer> areas;
 	
-	private final int type;
+	private final Set<Integer> types;
 	
 	private final int renameCount;
 	
@@ -34,23 +34,27 @@ public class SearchParameters implements Parcelable {
 		}
 	};
 	
-	public SearchParameters(String name, boolean useOldName, Set<Integer> areas, int type, int renameCount){
+	public SearchParameters(String name, boolean useOldName, Set<Integer> areas, Set<Integer> types, int renameCount){
 		this.name = name;
 		this.useOldName= useOldName;
 		this.areas = areas;
-		this.type = type;
+		this.types = types;
 		this.renameCount = renameCount;
 	}
 	
 	public SearchParameters(Parcel in){
 		name = in.readString();
-		useOldName = in.readInt()==1;
+		useOldName = (in.readInt()==1);
 		areas = new HashSet<Integer>();
 		int[] buffer = in.createIntArray();
 		for(int area : buffer){
 			areas.add(area);
 		}
-		type = in.readInt();
+		types = new HashSet<Integer>();
+		int[] buffer2 = in.createIntArray();
+		for(int type : buffer2){
+			types.add(type);
+		}
 		renameCount = in.readInt();
 	}
 
@@ -60,6 +64,18 @@ public class SearchParameters implements Parcelable {
 
 	public Set<Integer> getAreas() {
 		return areas;
+	}
+
+	public boolean isUseOldName() {
+		return useOldName;
+	}
+
+	public Set<Integer> getTypes() {
+		return types;
+	}
+
+	public int getRenameCount() {
+		return renameCount;
 	}
 
 	@Override
@@ -73,13 +89,22 @@ public class SearchParameters implements Parcelable {
 	{
 		p.writeString(name);
 		p.writeInt(useOldName ? 1:0);
-		int [] buffer = new int[areas.size()];
-		int counter = 0;
-		for(Integer area : areas){
-			buffer[counter++] = area;
+		{
+			int [] buffer = new int[areas.size()];
+			int counter = 0;
+			for(Integer area : areas){
+				buffer[counter++] = area;
+			}
+			p.writeIntArray(buffer);
 		}
-		p.writeIntArray(buffer);
-		p.writeInt(type);
+		{
+			int [] buffer = new int[types.size()];
+			int counter = 0;
+			for(Integer type : types){
+				buffer[counter++] = type;
+			}
+			p.writeIntArray(buffer);
+		}
 		p.writeInt(renameCount);
 	}
 
