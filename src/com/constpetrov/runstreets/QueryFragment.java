@@ -9,16 +9,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.constpetrov.runstreets.db.StreetsDataSource;
-import com.constpetrov.runstreets.gui.ExecQuery;
-import com.constpetrov.runstreets.gui.LoadDBTask;
-import com.constpetrov.runstreets.gui.OnQueryListener;
 import com.constpetrov.runstreets.gui.OptionItem;
-import com.constpetrov.runstreets.gui.UpdateGuiListener;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
 import com.constpetrov.runstreets.model.SearchParameters;
+import com.constpetrov.runstreets.model.Street;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,20 +24,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
-public class QueryFragment extends Fragment implements UpdateGuiListener{
+public class QueryFragment extends Fragment{
 	
-	private OnQueryListener mListener;
+	private TaskCallbacks mCallbacks;
 	private Button findButton;
 	private TextView areas;
 	private TextView types;
+	
+	public static interface TaskCallbacks {
+	    void onPreExecute(int titleId, int messageId);
+	    void onProgressUpdate(int percent);
+	    void onCancelled();
+	    void onPostExecute();
+	    void onPostExecute(Collection<Street> result);
+	}
+
+	
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+		LoadDBTask t = new LoadDBTask();
+		t.execute();
+	}
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View result = inflater.inflate(R.layout.fragment_query, container, false);
 		
-		LoadDBTask t = new LoadDBTask(getActivity(), this);
-		t.execute();
+		
 		
 		return result;
 		
@@ -51,15 +68,18 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnQueryListener) activity;
+        	mCallbacks = (TaskCallbacks) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
     }	
 
-
-
 	@Override
+	public void onDetach() {
+		super.onDetach();
+		mCallbacks = null;
+	}
+
 	public void updateGui() {
 		ArrayList<OptionItem<Area>> groups = ((FragActivity)getActivity()).getGroups();
 		List<List<OptionItem<Area>>> children = ((FragActivity)getActivity()).getChildren();
@@ -150,7 +170,7 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name, boolean useOldNames) {
 		SearchParameters params = new SearchParameters(name, useOldNames, areas, Collections.<Integer> emptySet(), 0);
-		ExecQuery query = new ExecQuery(getActivity(), mListener);
+		ExecQuery query = new ExecQuery();
 		query.execute(params);
 	}
 
@@ -191,6 +211,50 @@ public class QueryFragment extends Fragment implements UpdateGuiListener{
 		return box.isChecked();
 	}
 	
-	
+	class LoadDBTask extends AsyncTask<Void, Void, Void> {
+		@Override
+		protected void onPreExecute()
+		{
+			if(mCallbacks != null){
+				mCallbacks.onPreExecute(R.string.db_update, R.string.please_wait);
+			}
+		}
 
+		@Override
+		protected Void doInBackground(Void... unused)
+		{
+			StreetsDataSource.get(getActivity());
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(final Void success)
+		{
+			if(mCallbacks != null){
+				mCallbacks.onPostExecute();
+			}
+		}
+	}
+	
+	class ExecQuery extends
+			AsyncTask<SearchParameters, Void, Collection<Street>> {
+		
+		@Override
+		protected Collection<Street> doInBackground(SearchParameters... params) {
+			Collection<Street> res = StreetsDataSource.get().findStreets(params[0]); 
+			return res;
+		}
+		
+		@Override
+		protected void onPostExecute(final Collection<Street> result) {
+			mCallbacks.onPostExecute(result);
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			if(mCallbacks != null){
+				mCallbacks.onPreExecute(R.string.exec_query, R.string.please_wait);
+			}
+		}
+	}
 }

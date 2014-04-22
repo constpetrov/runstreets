@@ -14,18 +14,13 @@
         android:layout_below="@id/type"
         android:layout_alignLeft="@id/type"
         />
-    <!-- <TextView android:id="@+id/houses"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/renames"
-        android:layout_alignLeft="@id/renames"/> -->
     <TextView android:id="@+id/areas_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/renames"
         android:layout_alignLeft="@id/renames"
-        android:text="Районы:"
-        android:textStyle="bold"/>
+        android:text="@string/label_areas"
+        style="@style/labels_style_bold"/>
     <TextView android:id="@+id/areas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

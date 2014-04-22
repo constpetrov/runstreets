@@ -17,4 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="labels_style">
+        <item name="android:textSize">20sp</item>
+    </style>
+    
+    <style name="labels_style_bold" parent="@style/labels_style">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

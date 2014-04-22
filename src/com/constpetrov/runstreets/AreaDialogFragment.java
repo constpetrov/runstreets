@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.constpetrov.runstreets.gui.ExpandableCheckboxAdapter;
 import com.constpetrov.runstreets.gui.OptionItem;
-import com.constpetrov.runstreets.gui.UpdateGuiListener;
 import com.constpetrov.runstreets.model.Area;
 
 import android.app.Dialog;
@@ -44,7 +43,7 @@ public class AreaDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				writeGroups(groups, ((FragActivity)getActivity()).getGroups());
 				writeChildren(children, ((FragActivity)getActivity()).getChildren());
-				((UpdateGuiListener)getActivity()).updateGui();
+				((FragActivity)getActivity()).updateGui();
 				dismiss();
 			}
 			

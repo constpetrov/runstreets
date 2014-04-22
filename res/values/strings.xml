@@ -13,5 +13,7 @@
     <string name="dialog_area_title">Районы:</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="oldNames">Включая старые названия</string>
+    <string name="label_areas">Районы:</string>
 
 </resources>

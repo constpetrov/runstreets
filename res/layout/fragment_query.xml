@@ -10,7 +10,9 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/button1"
-        android:ems="10" android:inputType="text"/>
+        android:ems="10"
+        style="@style/labels_style"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/button1"
@@ -18,33 +20,30 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/editText"
+        
         android:text="@string/button" />
-    
-    <TextView android:id="@+id/areas"
+
+    <TextView
+        android:id="@+id/areas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/editText"
+        style="@style/labels_style"
         android:layout_below="@+id/fragment_queryUseOldNames"/>
-    
-    <TextView android:id="@+id/types"
+
+    <TextView
+        android:id="@+id/types"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/areas"
-        android:layout_below="@id/areas"/>
-    
-	<CheckBox android:id="@+id/fragment_queryUseOldNames"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/editText"
-		android:text="Включая старые названия"
-		/>
+        android:layout_below="@id/areas" />
 
-    <ExpandableListView
-        android:id="@+id/expandableListView2"
+    <CheckBox
+        android:id="@+id/fragment_queryUseOldNames"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/areas" >
-    </ExpandableListView>
-    
+        android:layout_below="@id/editText"
+        style="@style/labels_style"
+        android:text="@string/oldNames" />
 
 </RelativeLayout>
