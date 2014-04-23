@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent" 
+    android:orientation="vertical">
     
    	<TextView android:id="@+id/type"
         android:layout_width="wrap_content"
@@ -11,20 +12,17 @@
     <ListView android:id="@+id/renames"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/type"
-        android:layout_alignLeft="@id/type"
+        android:layout_marginLeft="16dp"
         />
     <TextView android:id="@+id/areas_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/renames"
-        android:layout_alignLeft="@id/renames"
         android:text="@string/label_areas"
+        android:layout_marginLeft="16dp"
         style="@style/labels_style_bold"/>
     <TextView android:id="@+id/areas"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/areas_title"
-        android:layout_alignLeft="@id/areas_title"/>
+        android:layout_marginLeft="16dp"
+        android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+</LinearLayout>

@@ -451,13 +451,13 @@ public class StreetsDataSource {
 		}
 		BufferedReader r = null;
 		try{
-			r = new BufferedReader(new InputStreamReader(assets.open("strets_info.sql")));
+			r = new BufferedReader(new InputStreamReader(assets.open("streets_info.sql")));
 			String line = r.readLine();
 			while(line != null){
 				if(!"".equals(line) && !" ".equals(line)){
 					try{
 						dbHelper.getWritableDatabase().execSQL(line);
-					} catch (SQLException e){
+					} catch (Exception e){
 						Log.e(TAG, "Cannot exec SQL: " + line, e);
 					}
 				}

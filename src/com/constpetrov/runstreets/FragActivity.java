@@ -139,6 +139,9 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 
 	@Override
 	public void onPostExecute(List<StreetInfo> result) {
+		if(dialog != null && dialog.isShowing()){
+			dialog.dismiss();
+		}
 		this.result = new ArrayList<StreetInfo>();
 		this.result.addAll(result);
 		Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.result_frag);

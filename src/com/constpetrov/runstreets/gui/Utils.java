@@ -1,5 +1,6 @@
 package com.constpetrov.runstreets.gui;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -14,8 +15,11 @@ public class Utils {
         }
 
         int totalHeight = 0;
+        Log.i("Utils", "listAdapter.getCount() = " + listAdapter.getCount());
         for (int i = 0; i < listAdapter.getCount(); i++) {
+        	Log.i("Utils", "i = " + i);
             View listItem = listAdapter.getView(i, null, listView);
+            Log.i("Utils", "listItem is " + (listItem == null ? "": "NOT ") + "null");
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
