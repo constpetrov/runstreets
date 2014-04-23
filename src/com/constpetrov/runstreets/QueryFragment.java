@@ -45,8 +45,7 @@ public class QueryFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		LoadDBTask t = new LoadDBTask();
-		t.execute();
+		
 	}
 
 
@@ -55,8 +54,6 @@ public class QueryFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View result = inflater.inflate(R.layout.fragment_query, container, false);
-		
-		
 		
 		return result;
 		
@@ -69,6 +66,8 @@ public class QueryFragment extends Fragment{
         super.onAttach(activity);
         try {
         	mCallbacks = (TaskCallbacks) activity;
+        	LoadDBTask t = new LoadDBTask();
+    		t.execute();
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
@@ -129,42 +128,36 @@ public class QueryFragment extends Fragment{
 		
 		String areasStr = b.length() ==0 ? "Все районы":b.toString();
 		
-		
-	    if(findButton == null){
-		    findButton = (Button)getActivity().findViewById(R.id.button1);
-		    findButton.setOnClickListener(new View.OnClickListener() {
+	    findButton = (Button)getActivity().findViewById(R.id.button1);
+	    findButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				findStreets(getAreas(), getRenames(), getTypes(), getName(), isUseOldNames());
+			}
+		});
+	    
+	    areas = (TextView)getActivity().findViewById(R.id.areas);
+	    areas.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AreaDialogFragment dialog = new AreaDialogFragment();
+				dialog.show(getFragmentManager(), "dialog");
 				
-				@Override
-				public void onClick(View v) {
-					findStreets(getAreas(), getRenames(), getTypes(), getName(), isUseOldNames());
-				}
-			});
-	    }
-	    if(areas == null){
-		    areas = (TextView)getActivity().findViewById(R.id.areas);
-		    areas.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					AreaDialogFragment dialog = new AreaDialogFragment();
-					dialog.show(getFragmentManager(), "dialog");
-					
-				}
-			});
-	    }
+			}
+		});
 		areas.setText(areasStr);
 	    
-		if(types == null){
-		    types = (TextView)getActivity().findViewById(R.id.types);
-		    types.setOnClickListener(new View.OnClickListener() {
+	    types = (TextView)getActivity().findViewById(R.id.types);
+	    types.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO show dialog
 				
-				@Override
-				public void onClick(View v) {
-					// TODO show dialog
-					
-				}
-			});
-		}
+			}
+		});
 	}
 	
 	protected void findStreets(Set<Integer> areas,
