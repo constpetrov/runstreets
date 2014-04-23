@@ -131,13 +131,18 @@ public class Street implements Parcelable, Comparable<Street>{
 	public Street() {
 		
 	}
+	
 	@Override
 	public int compareTo(Street another) {
 		if(this.getSort() != null && another.getSort() != null){
 			if(this.getSort().compareTo(another.getSort()) == 0){
-				if(this.getSort_second() != null && another.getSort_second() != null){
-					return this.getSort_second().compareTo(another.getSort_second());
-				} else return 0;
+				if(this.getSort_second()!= null ){
+					if(another.getSort_second() != null){
+						return this.getSort_second().compareTo(another.getSort_second());
+					} else return 1;
+				} else if(another.getSort_second()!= null ){
+					return -1;
+				} else return Integer.valueOf(this.getId()).compareTo(Integer.valueOf(another.getId()));
 			} else return this.getSort().compareTo(another.getSort());
 		}
 		return this.getName().compareTo(another.getName());

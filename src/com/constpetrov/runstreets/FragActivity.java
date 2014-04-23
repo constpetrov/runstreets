@@ -9,6 +9,7 @@ import com.constpetrov.runstreets.gui.OptionItem;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetInfo;
+import com.constpetrov.runstreets.model.Type;
 
 import android.os.Bundle;
 import android.app.ProgressDialog;
@@ -24,6 +25,8 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	private ArrayList<OptionItem<Area>> groups = new ArrayList<OptionItem<Area>>();
 	
 	private List<List<OptionItem<Area>>> children = new ArrayList<List<OptionItem<Area>>>();
+	
+	private ArrayList<OptionItem<Type>> streetTypes = new ArrayList<OptionItem<Type>>();
 
 	ProgressDialog dialog;
 	
@@ -76,6 +79,12 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 		return children;
 	}
 	
+	public ArrayList<OptionItem<Type>> getStreetTypes() {
+		return streetTypes;
+	}
+
+
+
 	public void updateGui() {
 		try{
 			((QueryFragment)getSupportFragmentManager().findFragmentById(R.id.query_frag)).updateGui();

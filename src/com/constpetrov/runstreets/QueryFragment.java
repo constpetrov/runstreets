@@ -14,6 +14,7 @@ import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
 import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
+import com.constpetrov.runstreets.model.Type;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -120,13 +121,35 @@ public class QueryFragment extends Fragment{
 	    		continue;
 	    	}
 	    	b.append(group.getName());
-    		b.append(":");
-    		b.append("\n");
+    		b.append(": ");
     		b.append(childString);
     		b.append("\n");
 	    }
 		
-		String areasStr = b.length() ==0 ? "Все районы":b.toString();
+		String areasStr = b.length() ==0 ? "Все районы →":b.toString();
+		
+		ArrayList<OptionItem<Type>> streetTypes = ((FragActivity)getActivity()).getStreetTypes();
+		if(streetTypes.size() == 0){
+			List<Type> types = StreetsDataSource.get().getStreetTypes();
+			for(Type t: types){
+				OptionItem<Type> item = new OptionItem<Type>(t, t.getName());
+				streetTypes.add(item);
+			}
+		}
+		
+		b = new StringBuilder();
+		String typesString = "Все типы →";  
+		for(OptionItem<Type> t: streetTypes){
+			if(t.isSelected()){
+				b.append(t.getName());
+				b.append(", ");
+			}
+		}
+		
+		if(b.lastIndexOf(",") != -1){
+			typesString = b.substring(0, b.lastIndexOf(","));
+		}
+
 		
 	    findButton = (Button)getActivity().findViewById(R.id.button1);
 	    findButton.setOnClickListener(new View.OnClickListener() {
@@ -154,15 +177,16 @@ public class QueryFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO show dialog
-				
+				TypesDialogFragment dialog = new TypesDialogFragment();
+				dialog.show(getFragmentManager(), "type_dialog");
 			}
 		});
+	    types.setText(typesString);
 	}
 	
 	protected void findStreets(Set<Integer> areas,
 			List<Rename> renames, Set<Integer> types, String name, boolean useOldNames) {
-		SearchParameters params = new SearchParameters(name, useOldNames, areas, Collections.<Integer> emptySet(), 0);
+		SearchParameters params = new SearchParameters(name, useOldNames, areas, types, 0);
 		ExecQuery query = new ExecQuery();
 		query.execute(params);
 	}
@@ -189,7 +213,13 @@ public class QueryFragment extends Fragment{
 	}
 	
 	private Set<Integer> getTypes(){
-		return null;
+		Set<Integer> result = new HashSet<Integer>();
+		for(OptionItem<Type> t: ((FragActivity)getActivity()).getStreetTypes()){
+			if(t.isSelected()){
+				result.add(t.getItem().getId());
+			}
+		}
+		return result;
 	}
 
 	private String getName(){

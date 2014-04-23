@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/areas"
+        style="@style/labels_style"
         android:layout_below="@id/areas" />
 
     <CheckBox

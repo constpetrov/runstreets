@@ -19,6 +19,7 @@ import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
 import com.constpetrov.runstreets.model.StreetInfo;
+import com.constpetrov.runstreets.model.Type;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -26,6 +27,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.graphics.Path.FillType;
 import android.util.Log;
 
 public class StreetsDataSource {
@@ -383,15 +385,21 @@ public class StreetsDataSource {
 		return null;
 	}
 	
-	@SuppressWarnings("unused")
-	private List<String> getStreetTypes(){
-		List<String> res = new LinkedList<String>();
-		Cursor c = dbHelper.getReadableDatabase().query("street_types", new String[]{"name"},"is_old = 0",null,null,null,null);
+	public List<Type> getStreetTypes(){
+		List<Type> res = new LinkedList<Type>();
+		Cursor c = dbHelper.getReadableDatabase().query("street_types", new String[]{"id", "name"},null,null,null,null,null);
 		c.moveToFirst();
 		while(!c.isAfterLast()){
-			res.add(c.getString(0));
+			res.add(cursorToType(c));
 			c.moveToNext();
 		}
+		return res;
+	}
+	
+	private Type cursorToType(Cursor c){
+		Type res = new Type();
+		res.setId(c.getInt(0));
+		res.setName(c.getString(1));
 		return res;
 	}
 	
@@ -553,23 +561,24 @@ public class StreetsDataSource {
 	}
 
 	public Collection<Street> findStreets(SearchParameters params){
-		String selectByName = "SELECT * FROM streets "
+		String selectByName = "SELECT *, streets.type s_type, streets.type h_type FROM streets "
 				+ "WHERE streets.name_lower LIKE \"{0}%\" "
 				+ "OR streets.name_lower LIKE \"%{0}%\"";
-		String selectByOldName = "SELECT * FROM streets, street_history ON streets.id = street_history.id_street "
+		String selectByOldName = "SELECT *, streets.type s_type, street_history.type h_type FROM streets, street_history ON streets.id = street_history.id_street "
 				+ "WHERE streets.name_lower LIKE \"{0}%\" "
 				+ "OR streets.name_lower LIKE \"%{0}%\" "
 				+ "OR street_history.name_lower LIKE \"{0}%\" "
 				+ "OR street_history.name_lower LIKE \"%{0}%\"";
 		String selectByArea = "SELECT DISTINCT * FROM ({0}) a, street_areas ON a.id = street_areas.street WHERE street_areas.area IN ({1})";
-		String selectByType = "SELECT * FROM ({0}) a WHERE a.type IN ({1})";
-		String fullQuery="";
+		String selectByType = "SELECT * FROM ({0}) a WHERE a.s_type IN ({1}) OR a.h_type IN ({1})";
 		
+		String[] fullQuery= new String[] {"", ""};
+		
+		fullQuery[0] = Utils.replace(selectByName, params.getName().toLowerCase());
+
 		if(params.isUseOldName()){
-			fullQuery = Utils.replace(selectByOldName, params.getName());
-		} else {
-			fullQuery = Utils.replace(selectByName, params.getName());
-		}
+			fullQuery[1] = Utils.replace(selectByOldName, params.getName().toLowerCase());
+		} 
 		
 		if (params.getAreas().size()!=0){
 			StringBuilder areaString = new StringBuilder();
@@ -584,7 +593,11 @@ public class StreetsDataSource {
 				areaString.append(area).append(", ");
 			}
 			String inString = areaString.substring(0, areaString.lastIndexOf(","));
-			fullQuery = Utils.replace(selectByArea, fullQuery, inString);
+			for(int i = 0; i < fullQuery.length; i++){
+				if(!"".equals(fullQuery[i])){
+					fullQuery[i] = Utils.replace(selectByArea, fullQuery[i], inString);
+				}
+			}
 		}
 		
 		if (params.getTypes().size()!= 0){
@@ -594,23 +607,29 @@ public class StreetsDataSource {
 			}
 			String inString = typeString.substring(0, typeString.lastIndexOf(","));
 			
-			fullQuery = Utils.replace(selectByType, fullQuery, inString);
+			for(int i = 0; i < fullQuery.length; i++){
+				if(!"".equals(fullQuery[i])){
+					fullQuery[i] = Utils.replace(selectByType, fullQuery[i], inString);
+				}
+			}
 		}
 		
 		Set<Street> result = new TreeSet<Street>();
-		Cursor c = null;
-		try{
-			c = dbHelper.getReadableDatabase().rawQuery(fullQuery, null);
-			c.moveToFirst();
-			while(!c.isAfterLast()){
-				result.add(cursorToStreet(c));
-				c.moveToNext();
-			}
-		} catch (SQLException e){
-			Log.e(TAG, "Cannot execute query");
-		} finally {
-			if(c != null){
-				c.close();
+		for(String query : fullQuery){
+			Cursor c = null;
+			try{
+				c = dbHelper.getReadableDatabase().rawQuery(query, null);
+				c.moveToFirst();
+				while(!c.isAfterLast()){
+					result.add(cursorToStreet(c));
+					c.moveToNext();
+				}
+			} catch (SQLException e){
+				Log.e(TAG, "Cannot execute query");
+			} finally {
+				if(c != null){
+					c.close();
+				}
 			}
 		}
 		return result;
@@ -630,4 +649,5 @@ public class StreetsDataSource {
 		}
 		return null;
 	}
+
 }
