@@ -12,11 +12,13 @@ import com.constpetrov.runstreets.db.StreetsDataSource;
 import com.constpetrov.runstreets.gui.OptionItem;
 import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.Rename;
+import com.constpetrov.runstreets.model.RenameCountType;
 import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.Type;
 
 import android.app.Activity;
+import android.database.DataSetObserver;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,8 @@ public class QueryFragment extends Fragment{
 	private Button findButton;
 	private TextView areas;
 	private TextView types;
+	private Spinner rct;
+	private EditText rename;
 	
 	public static interface TaskCallbacks {
 	    void onPreExecute(int titleId, int messageId, boolean withProgress);
@@ -156,7 +160,7 @@ public class QueryFragment extends Fragment{
 			
 			@Override
 			public void onClick(View v) {
-				findStreets(getAreas(), getRenames(), getTypes(), getName(), isUseOldNames());
+				findStreets(getAreas(), getRenames(), getRenameType(), getTypes(), getName(), isUseOldNames());
 			}
 		});
 	    
@@ -182,11 +186,19 @@ public class QueryFragment extends Fragment{
 			}
 		});
 	    types.setText(typesString);
+	    
+	    rct = (Spinner)getActivity().findViewById(R.id.spinner1);
+	    rct.setAdapter(new ArrayAdapter<RenameCountType>(getActivity(),
+	    	      android.R.layout.simple_list_item_1, RenameCountType.values()));
+	    
+	    
+	    rename = (EditText)getActivity().findViewById(R.id.renames);
+	    
 	}
 	
 	protected void findStreets(Set<Integer> areas,
-			List<Rename> renames, Set<Integer> types, String name, boolean useOldNames) {
-		SearchParameters params = new SearchParameters(name, useOldNames, areas, types, 0);
+			int renames, RenameCountType renType, Set<Integer> types, String name, boolean useOldNames) {
+		SearchParameters params = new SearchParameters(name, useOldNames, areas, types, renType, renames);
 		ExecQuery query = new ExecQuery();
 		query.execute(params);
 	}
@@ -208,8 +220,15 @@ public class QueryFragment extends Fragment{
 		return result;
 	}
 	
-	private List<Rename> getRenames(){
-		return null;
+	private int getRenames(){
+		if (!"".equals(rename.getText().toString())){
+			return Integer.valueOf(rename.getText().toString());
+		} 
+		return 0;
+	}
+	
+	private RenameCountType getRenameType(){
+		return (RenameCountType)rct.getSelectedItem();
 	}
 	
 	private Set<Integer> getTypes(){

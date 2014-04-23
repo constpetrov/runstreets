@@ -5,13 +5,13 @@
 
     <EditText
         android:id="@+id/editText"
+        style="@style/labels_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/button1"
         android:ems="10"
-        style="@style/labels_style"
         android:inputType="text" />
 
     <Button
@@ -20,31 +20,57 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/editText"
-        
         android:text="@string/button" />
 
     <TextView
         android:id="@+id/areas"
+        style="@style/labels_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/editText"
-        style="@style/labels_style"
-        android:layout_below="@+id/fragment_queryUseOldNames"/>
+        android:layout_below="@+id/fragment_queryUseOldNames" />
 
     <TextView
         android:id="@+id/types"
+        style="@style/labels_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/areas"
-        style="@style/labels_style"
         android:layout_below="@id/areas" />
 
     <CheckBox
         android:id="@+id/fragment_queryUseOldNames"
+        style="@style/labels_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editText"
-        style="@style/labels_style"
         android:text="@string/oldNames" />
+
+    <TextView
+        android:id="@+id/textView1"
+        style="@style/labels_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/types"
+        android:layout_below="@id/types"
+        android:text="@string/renamed" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView1"
+        android:layout_alignParentLeft="true"/>
+    
+    <EditText
+        android:id="@+id/renames"
+        style="@style/labels_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@id/spinner1"
+        android:layout_alignBottom="@id/spinner1"
+        android:inputType="number" 
+        />
 
 </RelativeLayout>

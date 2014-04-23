@@ -17,6 +17,8 @@ public class SearchParameters implements Parcelable {
 	
 	private final Set<Integer> types;
 	
+	private final RenameCountType renameCountType;
+	
 	private final int renameCount;
 	
 	public static final Parcelable.Creator<SearchParameters> CREATOR = new Parcelable.Creator<SearchParameters>(){
@@ -34,11 +36,12 @@ public class SearchParameters implements Parcelable {
 		}
 	};
 	
-	public SearchParameters(String name, boolean useOldName, Set<Integer> areas, Set<Integer> types, int renameCount){
+	public SearchParameters(String name, boolean useOldName, Set<Integer> areas, Set<Integer> types, RenameCountType renameCountType, int renameCount){
 		this.name = name;
 		this.useOldName= useOldName;
 		this.areas = areas;
 		this.types = types;
+		this.renameCountType = renameCountType;
 		this.renameCount = renameCount;
 	}
 	
@@ -55,6 +58,7 @@ public class SearchParameters implements Parcelable {
 		for(int type : buffer2){
 			types.add(type);
 		}
+		renameCountType = RenameCountType.valueOf(in.readString());
 		renameCount = in.readInt();
 	}
 
@@ -76,6 +80,12 @@ public class SearchParameters implements Parcelable {
 
 	public int getRenameCount() {
 		return renameCount;
+	}
+	
+	
+
+	public RenameCountType getRenameCountType() {
+		return renameCountType;
 	}
 
 	@Override
@@ -105,6 +115,7 @@ public class SearchParameters implements Parcelable {
 			}
 			p.writeIntArray(buffer);
 		}
+		p.writeString(renameCountType.name());
 		p.writeInt(renameCount);
 	}
 

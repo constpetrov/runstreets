@@ -15,6 +15,7 @@ import com.constpetrov.runstreets.model.Area;
 import com.constpetrov.runstreets.model.AreaHistory;
 import com.constpetrov.runstreets.model.AreaInfo;
 import com.constpetrov.runstreets.model.Rename;
+import com.constpetrov.runstreets.model.RenameCountType;
 import com.constpetrov.runstreets.model.SearchParameters;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetHistory;
@@ -31,6 +32,8 @@ import android.graphics.Path.FillType;
 import android.util.Log;
 
 public class StreetsDataSource {
+	
+	private static final String COOL_QUERY = "SELECT * FROM {0} WHERE s_id IN (SELECT id_street FROM street_history GROUP BY id_street HAVING COUNT(*) {1})";
 	
 	private static final String TABLE_AREAS = "areas";
 	private static final String TABLE_STREETS = "streets";
@@ -561,14 +564,15 @@ public class StreetsDataSource {
 	}
 
 	public Collection<Street> findStreets(SearchParameters params){
-		String selectByName = "SELECT *, streets.type s_type, streets.type h_type FROM streets "
+		String selectByName = "SELECT *, streets.id s_id, streets.type s_type, streets.type h_type FROM streets "
 				+ "WHERE streets.name_lower LIKE \"{0}%\" "
 				+ "OR streets.name_lower LIKE \"%{0}%\"";
-		String selectByOldName = "SELECT *, streets.type s_type, street_history.type h_type FROM streets, street_history ON streets.id = street_history.id_street "
+		String selectByOldName = "SELECT *, streets.id s_id, streets.type s_type, street_history.type h_type FROM streets, street_history ON streets.id = street_history.id_street "
 				+ "WHERE streets.name_lower LIKE \"{0}%\" "
 				+ "OR streets.name_lower LIKE \"%{0}%\" "
 				+ "OR street_history.name_lower LIKE \"{0}%\" "
 				+ "OR street_history.name_lower LIKE \"%{0}%\"";
+		String selectByRenames = "SELECT * FROM ({0}) WHERE s_id IN (SELECT id_street FROM street_history GROUP BY id_street HAVING COUNT(*) {1})";
 		String selectByArea = "SELECT DISTINCT * FROM ({0}) a, street_areas ON a.id = street_areas.street WHERE street_areas.area IN ({1})";
 		String selectByType = "SELECT * FROM ({0}) a WHERE a.s_type IN ({1}) OR a.h_type IN ({1})";
 		
@@ -579,6 +583,12 @@ public class StreetsDataSource {
 		if(params.isUseOldName()){
 			fullQuery[1] = Utils.replace(selectByOldName, params.getName().toLowerCase());
 		} 
+		if(params.getRenameCountType() != RenameCountType.ANY)
+		for(int i = 0; i < fullQuery.length; i++){
+			if(!"".equals(fullQuery[i])){
+				fullQuery[i] = Utils.replace(selectByRenames, fullQuery[i], constructRename(params.getRenameCountType(), params.getRenameCount()));
+			}
+		}
 		
 		if (params.getAreas().size()!=0){
 			StringBuilder areaString = new StringBuilder();
@@ -633,6 +643,20 @@ public class StreetsDataSource {
 			}
 		}
 		return result;
+	}
+
+	private String constructRename(RenameCountType renameCountType,
+			int renameCount) {
+		String rename = "";
+		switch (renameCountType) {
+			case MORE: {rename = "> "; break;}
+			case LESS: {rename = "< "; break;}
+			case EQUALS: {rename = "= "; break;}
+		default:
+			break;
+		}
+		rename = rename + renameCount;
+		return rename;
 	}
 
 	public String getStreetTypeName(int type) {

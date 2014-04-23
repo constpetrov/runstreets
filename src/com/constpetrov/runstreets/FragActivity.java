@@ -7,6 +7,7 @@ import java.util.List;
 import com.constpetrov.runstreets.QueryFragment.TaskCallbacks;
 import com.constpetrov.runstreets.gui.OptionItem;
 import com.constpetrov.runstreets.model.Area;
+import com.constpetrov.runstreets.model.RenameCountType;
 import com.constpetrov.runstreets.model.Street;
 import com.constpetrov.runstreets.model.StreetInfo;
 import com.constpetrov.runstreets.model.Type;
@@ -27,6 +28,10 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	private List<List<OptionItem<Area>>> children = new ArrayList<List<OptionItem<Area>>>();
 	
 	private ArrayList<OptionItem<Type>> streetTypes = new ArrayList<OptionItem<Type>>();
+	
+	private RenameCountType renameCountType = RenameCountType.ANY;
+	
+	private int renameCount;
 
 	ProgressDialog dialog;
 	
@@ -82,6 +87,8 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	public ArrayList<OptionItem<Type>> getStreetTypes() {
 		return streetTypes;
 	}
+	
+
 
 
 

@@ -16,5 +16,6 @@
     <string name="ok">OK</string>
     <string name="oldNames">Включая старые названия</string>
     <string name="label_areas">Районы:</string>
+    <string name="renamed">"Переименовано "</string>
 
 </resources>
