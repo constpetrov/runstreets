@@ -50,7 +50,8 @@ public class QueryFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		
+		LoadDBTask t = new LoadDBTask();
+		t.execute();
 	}
 
 
@@ -71,8 +72,7 @@ public class QueryFragment extends Fragment{
         super.onAttach(activity);
         try {
         	mCallbacks = (TaskCallbacks) activity;
-        	LoadDBTask t = new LoadDBTask();
-    		t.execute();
+        	
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
