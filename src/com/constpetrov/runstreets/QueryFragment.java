@@ -72,7 +72,7 @@ public class QueryFragment extends Fragment{
         super.onAttach(activity);
         try {
         	mCallbacks = (TaskCallbacks) activity;
-        	
+        	//mCallbacks.onPostExecute();
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
@@ -89,7 +89,12 @@ public class QueryFragment extends Fragment{
 		List<List<OptionItem<Area>>> children = ((FragActivity)getActivity()).getChildren();
 		
 		if(groups.size() == 0 || children.size() == 0){
-			List<Area> groupAreas = StreetsDataSource.get().getAdministrativeStates();
+			List<Area> groupAreas = null;
+			try{
+				groupAreas = StreetsDataSource.get().getAdministrativeStates();
+			} catch (Exception e){
+				return;
+			}
 		    for(Area area: groupAreas){
 		    	OptionItem<Area> areaItem = new OptionItem<Area>(area, area.toString());
 		    	groups.add(areaItem);
@@ -156,7 +161,7 @@ public class QueryFragment extends Fragment{
 
 		
 	    findButton = (Button)getActivity().findViewById(R.id.button1);
-	    findButton.setOnClickListener(new View.OnClickListener() {
+		findButton.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {

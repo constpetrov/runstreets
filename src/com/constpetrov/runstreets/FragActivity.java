@@ -45,7 +45,7 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_frag);
-		
+		updateGui();
 		if(savedInstanceState != null){
 			streets = savedInstanceState.getParcelableArrayList(KEY_STREETS);
 			result = savedInstanceState.getParcelableArrayList(KEY_RESULT);
