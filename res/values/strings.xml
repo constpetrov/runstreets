@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">БГМ история улиц</string>
+    <string name="app_name">История улиц</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_result_list">Результаты поиска</string>
     <string name="button">find!</string>
@@ -9,7 +9,7 @@
     <string name="show_results">Загрузка результатов</string>
     <string name="exec_query">Поиск</string>
     <string name="please_wait">Подождите…</string>
-    <string name="title_activity_frag">БГМ streets</string>
+    <string name="title_activity_frag">История улиц</string>
     <string name="dialog_area_title">Районы:</string>
     <string name="dialog_type_title">Типы улиц:</string>
     <string name="cancel">Cancel</string>
