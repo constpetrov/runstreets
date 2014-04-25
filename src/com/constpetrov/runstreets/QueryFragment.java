@@ -35,6 +35,7 @@ public class QueryFragment extends Fragment{
 	private TextView types;
 	private Spinner rct;
 	private EditText rename;
+	private boolean loadInProgress;
 	
 	public static interface TaskCallbacks {
 	    void onPreExecute(int titleId, int messageId, boolean withProgress);
@@ -42,6 +43,7 @@ public class QueryFragment extends Fragment{
 	    void onCancelled();
 	    void onPostExecute();
 	    void onPostExecute(Collection<Street> result);
+	    void dismissDialog();
 	}
 
 	
@@ -50,8 +52,6 @@ public class QueryFragment extends Fragment{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		LoadDBTask t = new LoadDBTask();
-		t.execute();
 	}
 
 
@@ -72,7 +72,12 @@ public class QueryFragment extends Fragment{
         super.onAttach(activity);
         try {
         	mCallbacks = (TaskCallbacks) activity;
-        	//mCallbacks.onPostExecute();
+        	if(!loadInProgress){
+        		LoadDBTask t = new LoadDBTask();
+        		t.execute();
+        	} else {
+        		mCallbacks.onPreExecute(R.string.db_update, R.string.please_wait, false);
+        	}
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
         }
@@ -81,6 +86,7 @@ public class QueryFragment extends Fragment{
 	@Override
 	public void onDetach() {
 		super.onDetach();
+		mCallbacks.dismissDialog();
 		mCallbacks = null;
 	}
 
@@ -262,6 +268,7 @@ public class QueryFragment extends Fragment{
 		@Override
 		protected void onPreExecute()
 		{
+			loadInProgress = true;
 			if(mCallbacks != null){
 				mCallbacks.onPreExecute(R.string.db_update, R.string.please_wait, false);
 			}
@@ -277,6 +284,7 @@ public class QueryFragment extends Fragment{
 		@Override
 		protected void onPostExecute(final Void success)
 		{
+			loadInProgress = false;
 			if(mCallbacks != null){
 				mCallbacks.onPostExecute();
 			}

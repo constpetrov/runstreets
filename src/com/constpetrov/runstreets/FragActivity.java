@@ -45,7 +45,6 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_frag);
-		updateGui();
 		if(savedInstanceState != null){
 			streets = savedInstanceState.getParcelableArrayList(KEY_STREETS);
 			result = savedInstanceState.getParcelableArrayList(KEY_RESULT);
@@ -125,6 +124,13 @@ public class FragActivity extends FragmentActivity implements TaskCallbacks, Res
 			dialog.dismiss();
 		}
 		updateGui();
+	}
+	
+	@Override
+	public void dismissDialog() {
+		if(dialog != null && dialog.isShowing()){
+			dialog.dismiss();
+		}
 	}
 	
 	@Override
